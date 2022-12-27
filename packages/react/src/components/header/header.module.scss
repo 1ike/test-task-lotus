@@ -1,0 +1,21 @@
+@import '../../app/app.scss';
+
+$font-size: 1.2rem;
+
+.header {
+  padding: 0.3rem $layoutHorizontalPadding 1.2rem;
+  margin-bottom: 0.3rem;
+  border-bottom: 0.1rem solid #eee;
+
+  color: red;
+
+  &__preTitle {
+    font-weight: 400;
+    font-size: $font-size;
+    margin-right: 0.35rem;
+  }
+  &__title {
+    font-weight: bold;
+    font-size: $font-size;
+  }
+}
