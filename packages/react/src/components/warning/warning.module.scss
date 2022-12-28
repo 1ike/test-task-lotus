@@ -1,0 +1,13 @@
+@import '../../styles.scss';
+
+$font-size: 1.2rem;
+
+.warning {
+  display: inline-block;
+  padding: 0.2rem 0.5rem 0.3rem;
+  margin: 0;
+
+  color: $alertColor;
+  font-weight: bold;
+  background-color: #f9f2f4;
+}

@@ -1,0 +1,18 @@
+@import '../../styles.scss';
+
+.table {
+  th {
+    font-weight: 400;
+  }
+  &table {
+    border: none;
+  }
+}
+
+.head {
+  color: #6598aa;
+  text-transform: uppercase;
+}
+
+.body {
+}

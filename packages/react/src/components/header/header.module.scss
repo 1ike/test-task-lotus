@@ -1,13 +1,12 @@
-@import '../../app/app.scss';
+@import '../../styles.scss';
 
 $font-size: 1.2rem;
 
 .header {
   padding: 0.3rem $layoutHorizontalPadding 1.2rem;
-  margin-bottom: 0.3rem;
   border-bottom: 0.1rem solid #eee;
 
-  color: red;
+  color: #db5d61;
 
   &__preTitle {
     font-weight: 400;
