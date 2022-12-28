@@ -1,8 +1,38 @@
 /**
+ * Fonts
+ */
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: normal;
+  font-weight: 400;
+
+  /* Браузер сначала попробует найти шрифт локально */
+  src: local('Roboto Condensed'),
+    /* Если не получилось, загрузит woff2 */
+      url('./assets/fonts/Robotocondensed.woff2') format('woff2'),
+    /* Если браузер не поддерживает woff2, загрузит woff */
+      url('./assets/fonts/Robotocondensed.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  font-style: bold;
+  font-weight: 900;
+
+  /* Браузер сначала попробует найти шрифт локально */
+  src: local('Roboto Condensed'),
+    /* Если не получилось, загрузит woff2 */
+      url('./assets/fonts/Robotocondensedbold.woff2') format('woff2'),
+    /* Если браузер не поддерживает woff2, загрузит woff */
+      url('./assets/fonts/Robotocondensedbold.woff') format('woff');
+}
+
+/**
  * Common styles
  */
 html {
   font-size: 16px;
+  font-family: 'Roboto Condensed', 'Arial', sans-serif;
 }
 
 /**
