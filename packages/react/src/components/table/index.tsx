@@ -1,5 +1,6 @@
 import styles from './table.module.scss';
 import { participants as mockedParticipants } from './mockData';
+import Countdown from './countdown';
 
 export type Participant = {
   id: number;
@@ -26,20 +27,27 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
   ['actions', 'Действия:'],
 ];
 
-export function Table({
-  participants = mockedParticipants,
-}: {
-  participants: Participant[];
-}) {
+export function Table() {
+  const participants = mockedParticipants;
+  const activeParticipantId = 2;
+
   return (
-    <div>
+    <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead className={styles.head}>
           <tr>
             <th>Ход</th>
-            {participants.map((participant) => (
-              <th key={participant.id}></th>
-            ))}
+            {participants.length === 0 ? (
+              <th>
+                <Countdown />
+              </th>
+            ) : (
+              participants.map((participant) => (
+                <th key={participant.id}>
+                  {participant.id === activeParticipantId && <Countdown />}
+                </th>
+              ))
+            )}
           </tr>
           <tr>
             <th>Параметры и требования</th>
@@ -47,7 +55,9 @@ export function Table({
               <th key={participant.id}>
                 Участник №{participant.id}
                 <br />
-                {participant.name}
+                <span className={styles.participantName}>
+                  {participant.name}
+                </span>
               </th>
             ))}
           </tr>
@@ -55,9 +65,31 @@ export function Table({
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (
             <tr key={key}>
-              <th>{rowName}</th>
+              <th className={styles.rowName}>
+                <div>{rowName}</div>
+              </th>
               {participants.map((participant) => (
-                <td key={participant.id}>{participant[key]}</td>
+                <td key={participant.id}>
+                  <div className={styles.rowValues}>
+                    {key === 'value' ? (
+                      <div className={styles.value}>
+                        <span className={styles.valueOffered}>
+                          {participant[key]} руб.
+                        </span>
+                        <br />
+                        <span className={styles.valueDiscont}>
+                          -25,000 руб.
+                        </span>
+                        <br />
+                        <span className={styles.valueStart}>
+                          2,475,000 руб.
+                        </span>
+                      </div>
+                    ) : (
+                      participant[key]
+                    )}
+                  </div>
+                </td>
               ))}
             </tr>
           ))}

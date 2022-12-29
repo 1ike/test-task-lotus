@@ -1,18 +1,67 @@
 @import '../../styles.scss';
 
+.tableWrapper {
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
 .table {
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 0.45rem;
+  }
   th {
     font-weight: 400;
-  }
-  &table {
-    border: none;
   }
 }
 
 .head {
   color: #6598aa;
   text-transform: uppercase;
+
+  $verticalPadding: 1rem;
+  th {
+    padding-top: $verticalPadding;
+    padding-bottom: $verticalPadding;
+  }
 }
 
 .body {
+  tr:nth-child(odd) {
+    background-color: #f4f4f4;
+  }
+}
+
+.participantName {
+  font-weight: bold;
+}
+
+.rowName {
+  text-align: left;
+  div {
+    width: 25rem;
+    white-space: normal;
+  }
+}
+
+.rowValues {
+  width: $participantColumnWidth;
+  text-align: center;
+}
+
+.value {
+  font-weight: bold;
+  text-align: center;
+}
+.valueOffered {
+  color: #4887bd;
+}
+.valueDiscont {
+  color: #b66261;
+}
+.valueStart {
+  color: #629063;
 }

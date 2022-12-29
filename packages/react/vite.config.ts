@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsConfigPaths from 'vite-tsconfig-paths';
+import svgr from '@svgr/rollup';
 
 export default defineConfig({
   server: {
@@ -13,6 +14,7 @@ export default defineConfig({
     viteTsConfigPaths({
       root: '../../',
     }),
+    svgr(),
   ],
 
   test: {
