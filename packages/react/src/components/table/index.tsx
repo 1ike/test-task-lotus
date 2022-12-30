@@ -1,17 +1,10 @@
-import styles from './table.module.scss';
-import { participants as mockedParticipants } from './mockData';
-import Countdown from './countdown';
+import { useContext } from 'react';
 
-export type Participant = {
-  id: number;
-  name: string;
-  qualityImprovementEvent?: string;
-  productionTime: number;
-  warranty: number;
-  paymentTerms: number;
-  value: number;
-  actions?: string;
-};
+import { Participant } from '@lotus/shared';
+
+import styles from './table.module.scss';
+import Countdown from './countdown';
+import { ParticipantsContext } from './../../contexts/paticipants';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -28,7 +21,7 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 ];
 
 export function Table() {
-  const participants = mockedParticipants;
+  const { participants, loading } = useContext(ParticipantsContext);
   const activeParticipantId = 2;
 
   return (
@@ -37,7 +30,7 @@ export function Table() {
         <thead className={styles.head}>
           <tr>
             <th>Ход</th>
-            {participants.length === 0 ? (
+            {participants.length === 0 && !loading ? (
               <th>
                 <Countdown />
               </th>
@@ -51,15 +44,16 @@ export function Table() {
           </tr>
           <tr>
             <th>Параметры и требования</th>
-            {participants.map((participant) => (
-              <th key={participant.id}>
-                Участник №{participant.id}
-                <br />
-                <span className={styles.participantName}>
-                  {participant.name}
-                </span>
-              </th>
-            ))}
+            {!loading &&
+              participants.map((participant) => (
+                <th key={participant.id}>
+                  Участник №{participant.id}
+                  <br />
+                  <span className={styles.participantName}>
+                    {participant.name}
+                  </span>
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody className={styles.body}>
@@ -68,33 +62,35 @@ export function Table() {
               <th className={styles.rowName}>
                 <div>{rowName}</div>
               </th>
-              {participants.map((participant) => (
-                <td key={participant.id}>
-                  <div className={styles.rowValues}>
-                    {key === 'value' ? (
-                      <div className={styles.value}>
-                        <span className={styles.valueOffered}>
-                          {participant[key]} руб.
-                        </span>
-                        <br />
-                        <span className={styles.valueDiscont}>
-                          -25,000 руб.
-                        </span>
-                        <br />
-                        <span className={styles.valueStart}>
-                          2,475,000 руб.
-                        </span>
-                      </div>
-                    ) : (
-                      participant[key]
-                    )}
-                  </div>
-                </td>
-              ))}
+              {!loading &&
+                participants.map((participant) => (
+                  <td key={participant.id}>
+                    <div className={styles.rowValues}>
+                      {key === 'value' ? (
+                        <div className={styles.value}>
+                          <span className={styles.valueOffered}>
+                            {participant[key]} руб.
+                          </span>
+                          <br />
+                          <span className={styles.valueDiscont}>
+                            -25,000 руб.
+                          </span>
+                          <br />
+                          <span className={styles.valueStart}>
+                            2,475,000 руб.
+                          </span>
+                        </div>
+                      ) : (
+                        participant[key]
+                      )}
+                    </div>
+                  </td>
+                ))}
             </tr>
           ))}
         </tbody>
       </table>
+      {loading && <p className={styles.loading}>Загрузка...</p>}
     </div>
   );
 }

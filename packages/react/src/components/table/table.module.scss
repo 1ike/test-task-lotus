@@ -1,8 +1,10 @@
 @import '../../styles.scss';
 
 .tableWrapper {
+  display: flex;
+  align-items: center;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   white-space: nowrap;
 }
 
@@ -64,4 +66,9 @@
 }
 .valueStart {
   color: #629063;
+}
+
+.loading {
+  padding: 2rem;
+  font-size: 2rem;
 }

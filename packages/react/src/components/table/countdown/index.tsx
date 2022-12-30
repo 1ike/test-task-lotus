@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styles from './countdown.module.scss';
 import { ReactComponent as TimerIcon } from './hourglass-outline.svg';
 

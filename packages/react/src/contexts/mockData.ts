@@ -1,6 +1,6 @@
-import {Participant} from '.';
+import {Participants} from '@lotus/shared';
 
-export const participants: Participant[] = [
+export const participants: Participants = [
   {
     id: 1,
     name: 'OOO "Металпромсвязьинвест"',
