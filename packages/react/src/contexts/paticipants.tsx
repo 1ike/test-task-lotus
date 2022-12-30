@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { Participants } from '@lotus/shared';
 
-import { participants as mockedParticipants } from './mockData';
 import { socket } from './../api';
 
 const initialParticipants: Participants = [];
@@ -25,28 +24,12 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(initialLoading);
 
   useEffect(() => {
-    socket.onopen = (event) => {
-      console.log('open');
-      socket.send(
-        JSON.stringify({
-          event: 'events',
-          data: 'test events',
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          event: 'jjj',
-          data: 'test jjj',
-        })
-      );
-      socket.onmessage = function ({ data }) {
-        console.log(data);
-      };
-    };
-    setTimeout(() => {
-      setLoading(false);
-      setParticipantsState(mockedParticipants);
-    }, 1000);
+    socket.on('connect', function () {
+      socket.emit('getPaticipants', undefined, (json: string) => {
+        setLoading(false);
+        setParticipantsState(JSON.parse(json));
+      });
+    });
   }, [setParticipantsState]);
 
   const value = useMemo(
