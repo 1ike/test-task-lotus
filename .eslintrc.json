@@ -1,10 +1,68 @@
 {
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "ignorePatterns": [
+    "**/*"
+  ],
+  "plugins": [
+    "@nrwl/nx"
+  ],
+  "extends": [
+    "plugin:@nrwl/nx/typescript",
+    "airbnb",
+    "airbnb-typescript"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.base.json"
+  },
+  "rules": {
+    "no-spaces": 0,
+    "indent": 0,
+    "@typescript-eslint/indent": [
+      "error",
+      2,
+      {
+        "ignoredNodes": [
+          "PropertyDefinition[decorators]",
+          "TSUnionType"
+        ]
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2
+      }
+    ],
+    "react/jsx-indent": [
+      "error"
+    ],
+    "react/jsx-indent-props": [
+      "error"
+    ],
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-filename-extension": 0,
+    "react/prop-types": 0,
+    "no-underscore-dangle": 0,
+    "arrow-body-style": 0,
+    "import/prefer-default-export": 0,
+    "object-curly-newline": 0,
+    "import/no-named-as-default": 1,
+    "react/destructuring-assignment": 1,
+    "react/jsx-curly-newline": 1,
+    "react/state-in-constructor": 1,
+    "react/static-property-placement": 1,
+    "react/jsx-props-no-spreading": 1,
+    "react/function-component-definition": 0,
+    "react/require-default-props": 0
+  },
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
@@ -14,22 +72,14 @@
             "depConstraints": [
               {
                 "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
+                "onlyDependOnLibsWithTags": [
+                  "*"
+                ]
               }
             ]
           }
         ]
       }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
     }
   ]
 }
