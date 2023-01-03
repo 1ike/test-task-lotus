@@ -1,4 +1,4 @@
-export type ID = number
+export type ID = number;
 
 export type Participant = {
   id: ID;
@@ -11,4 +11,13 @@ export type Participant = {
   actions?: string;
 };
 
-export type Participants = Participant[]
+export type Participants = Participant[];
+
+export type Countdown = number;
+
+export type BidID = string;
+
+export type Bid = {
+  id: BidID;
+  participantID: ID;
+};

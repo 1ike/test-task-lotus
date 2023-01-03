@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { Participants } from '@lotus/shared';
 
-import { socket } from './../api';
+import { socket } from '../api';
 
 const initialParticipants: Participants = [];
 const initialLoading = true;
@@ -10,26 +10,29 @@ interface ParticipantsContextType {
   participants: Participants;
   loading: boolean;
 }
-export const ParticipantsContext = React.createContext<ParticipantsContextType>(
-  {
-    participants: initialParticipants,
-    loading: initialLoading,
-  }
-);
+export const ParticipantsContext = React.createContext<ParticipantsContextType>({
+  participants: initialParticipants,
+  loading: initialLoading,
+});
 
 export function ParticipantsProvider({ children }: PropsWithChildren) {
-  const [participants, setParticipantsState] =
-    useState<Participants>(initialParticipants);
+  const [participants, setParticipantsState] = useState<Participants>(initialParticipants);
 
   const [loading, setLoading] = useState(initialLoading);
 
   useEffect(() => {
-    socket.on('connect', function () {
+    socket.on('connect', () => {
       socket.emit('getPaticipants', undefined, (json: string) => {
         setLoading(false);
         setParticipantsState(JSON.parse(json));
       });
     });
+
+    socket.on('jjj', (...args) => {
+      console.log('args = ', args);
+    });
+
+    // return () => socket.removeAllListeners('jjj');
   }, [setParticipantsState]);
 
   const value = useMemo(
@@ -37,12 +40,8 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
       participants,
       loading,
     }),
-    [participants, loading]
+    [participants, loading],
   );
 
-  return (
-    <ParticipantsContext.Provider value={value}>
-      {children}
-    </ParticipantsContext.Provider>
-  );
+  return <ParticipantsContext.Provider value={value}>{children}</ParticipantsContext.Provider>;
 }

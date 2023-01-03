@@ -1,18 +1,35 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { participants } from '../assets/mockData';
+
+import { AppService } from './app.service';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-export class AppGateway {
+export class AppGateway implements OnGatewayInit {
   @WebSocketServer()
   server: Server;
 
+  constructor(private readonly appService: AppService) {}
+
+  afterInit(server: Server) {
+    this.appService.init(server);
+  }
+
   @SubscribeMessage('getPaticipants')
-  handleMe(): string {
-    return JSON.stringify(participants);
+  getPaticipants(): string {
+    return JSON.stringify(this.appService.getPaticipants());
+  }
+
+  @SubscribeMessage('newBid')
+  handleNewBid(): string {
+    return JSON.stringify(this.appService.getPaticipants());
   }
 }
