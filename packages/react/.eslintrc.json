@@ -2,11 +2,15 @@
   "extends": [
     "plugin:@nrwl/nx/react",
     "airbnb/hooks",
+    "prettier",
     "../../.eslintrc.json"
   ],
   "ignorePatterns": [
     "!**/*"
   ],
+  "rules": {
+    "react/react-in-jsx-scope": 0
+  },
   "overrides": [
     {
       "files": [
