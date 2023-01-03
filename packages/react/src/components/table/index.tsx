@@ -4,7 +4,7 @@ import { Participant } from '@lotus/shared';
 
 import styles from './table.module.scss';
 import Countdown from './countdown';
-import { ParticipantsContext } from './../../contexts/paticipants';
+import { ParticipantsContext } from '../../contexts/paticipants';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -49,9 +49,7 @@ export function Table() {
                 <th key={participant.id}>
                   Участник №{participant.id}
                   <br />
-                  <span className={styles.participantName}>
-                    {participant.name}
-                  </span>
+                  <span className={styles.participantName}>{participant.name}</span>
                 </th>
               ))}
           </tr>
@@ -68,17 +66,11 @@ export function Table() {
                     <div className={styles.rowValues}>
                       {key === 'value' ? (
                         <div className={styles.value}>
-                          <span className={styles.valueOffered}>
-                            {participant[key]} руб.
-                          </span>
+                          <span className={styles.valueOffered}>{participant[key]} руб.</span>
                           <br />
-                          <span className={styles.valueDiscont}>
-                            -25,000 руб.
-                          </span>
+                          <span className={styles.valueDiscont}>-25,000 руб.</span>
                           <br />
-                          <span className={styles.valueStart}>
-                            2,475,000 руб.
-                          </span>
+                          <span className={styles.valueStart}>2,475,000 руб.</span>
                         </div>
                       ) : (
                         participant[key]

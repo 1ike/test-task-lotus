@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { socket } from '../api';
 
 export type Countdown = number;
 
@@ -15,19 +16,17 @@ export function CountdownProvider({ children }: PropsWithChildren) {
   const [countdown, setCountdownState] = useState<Countdown>(initialCountdown);
 
   useEffect(() => {
-    // setTimeout(() => setParticipants([]), 0);
+    socket.on('countdown', (value) => {
+      setCountdownState(value);
+    });
   }, [setCountdownState]);
 
   const value = useMemo(
     () => ({
       countdown,
     }),
-    [countdown]
+    [countdown],
   );
 
-  return (
-    <CountdownContext.Provider value={value}>
-      {children}
-    </CountdownContext.Provider>
-  );
+  return <CountdownContext.Provider value={value}>{children}</CountdownContext.Provider>;
 }

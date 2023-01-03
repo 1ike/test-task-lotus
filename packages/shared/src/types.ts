@@ -1,7 +1,7 @@
-export type ID = number;
+export type ParticipantID = number;
 
 export type Participant = {
-  id: ID;
+  id: ParticipantID;
   name: string;
   qualityImprovementEvent?: string;
   productionTime: number;
@@ -19,5 +19,10 @@ export type BidID = string;
 
 export type Bid = {
   id: BidID;
-  participantID: ID;
+  participantID: ParticipantID;
+};
+
+export type NewBidRequest = {
+  previousBidID: BidID | null;
+  participantID: ParticipantID;
 };

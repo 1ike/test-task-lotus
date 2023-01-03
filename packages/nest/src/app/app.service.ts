@@ -1,23 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { interval, take, map, Subject, tap, Subscription } from 'rxjs';
-import { Server } from 'socket.io';
+import { randomUUID } from 'crypto';
 
-import { ID, Countdown, Bid } from '@lotus/shared';
+import { Countdown, Bid, NewBidRequest } from '@lotus/shared';
 import { participants } from '../assets/mockData';
 
-const countdownStartValue: Countdown = 120;
+const countdownStartValue: Countdown = 12;
 
 const participantIDs = participants.map((p) => p.id);
 
-// prettier-ignore
-const getRandomActiveParticipantID = () => participantIDs[
-  Math.floor(Math.random() * participantIDs.length)
-];
+const getRandomActiveParticipantID = () =>
+  participantIDs[Math.floor(Math.random() * participantIDs.length)];
+
+const getRandomCountdownValue = () =>
+  Math.floor(
+    countdownStartValue - Math.random() * (countdownStartValue - countdownStartValue * 0.1),
+  );
 
 @Injectable()
 export class AppService {
-  private server: Server;
-
   private bid: Bid;
 
   private countdownBroadcast$: Subject<Countdown>;
@@ -33,44 +34,41 @@ export class AppService {
     return participants;
   }
 
-  init(server: Server) {
-    this.setServer(server);
+  init() {
     this.startCountdown();
-
-    this.countdownBroadcast$.subscribe((value) => {
-      server.emit('jjj', value, value + 1);
-    });
-    setTimeout(() => {
-      this.handleNewBid(getRandomActiveParticipantID());
-    }, 1500);
 
     return this.countdownBroadcast$;
   }
 
-  private setServer(server: Server) {
-    this.server = server;
-  }
+  handleNewBid(newBidRequest: NewBidRequest) {
+    if (this.bid && this.bid.id !== newBidRequest.previousBidID) return undefined;
 
-  handleNewBid(id: ID) {
-    this.setBid(id);
-    this.startCountdown();
-  }
-
-  private setBid(id: ID) {
     this.bid = {
-      id: 'sss',
-      participantID: id,
+      id: randomUUID(),
+      participantID: newBidRequest.participantID,
     };
+
+    this.startCountdown();
+
+    return this.bid;
   }
 
   private startCountdown() {
     this.countdown$?.unsubscribe();
+
+    const randomCountdownBreakpoint = getRandomCountdownValue();
 
     this.countdown$ = interval(1000)
       .pipe(
         take(countdownStartValue),
         map((value) => countdownStartValue - value - 1),
         tap((value) => {
+          if (randomCountdownBreakpoint === value) {
+            this.handleNewBid({
+              previousBidID: this.bid.id,
+              participantID: getRandomActiveParticipantID(),
+            });
+          }
           console.log('value = ', value);
           this.countdownBroadcast$.next(value);
         }),

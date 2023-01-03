@@ -28,11 +28,13 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
       });
     });
 
-    socket.on('jjj', (...args) => {
+    socket.on('countdown', (...args) => {
       console.log('args = ', args);
     });
 
-    // return () => socket.removeAllListeners('jjj');
+    return () => {
+      socket.removeAllListeners('jjj');
+    };
   }, [setParticipantsState]);
 
   const value = useMemo(

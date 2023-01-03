@@ -1,13 +1,7 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { ID } from '@lotus/shared';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { ParticipantID } from '@lotus/shared';
 
-export type ActiveParticipantID = ID | null;
+export type ActiveParticipantID = ParticipantID | null;
 
 const initialActiveParticipantID = null;
 
@@ -15,19 +9,18 @@ interface ActiveParticipantIDContextType {
   activeParticipantID: ActiveParticipantID;
   setActiveParticipantID?: (activeParticipantID: ActiveParticipantID) => void;
 }
-export const ActiveParticipantIDContext =
-  React.createContext<ActiveParticipantIDContextType>({
-    activeParticipantID: initialActiveParticipantID,
-  });
+export const ActiveParticipantIDContext = React.createContext<ActiveParticipantIDContextType>({
+  activeParticipantID: initialActiveParticipantID,
+});
 
 export function ActiveParticipantIDProvider({ children }: PropsWithChildren) {
-  const [activeParticipantID, setActiveParticipantIDState] =
-    useState<ActiveParticipantID>(initialActiveParticipantID);
+  const [activeParticipantID, setActiveParticipantIDState] = useState<ActiveParticipantID>(
+    initialActiveParticipantID,
+  );
 
   const setActiveParticipantID = useCallback(
-    (activeParticipantID: ActiveParticipantID) =>
-      setActiveParticipantIDState(activeParticipantID),
-    [setActiveParticipantIDState]
+    (activeParticipantID: ActiveParticipantID) => setActiveParticipantIDState(activeParticipantID),
+    [setActiveParticipantIDState],
   );
 
   useEffect(() => {
@@ -39,7 +32,7 @@ export function ActiveParticipantIDProvider({ children }: PropsWithChildren) {
       activeParticipantID,
       setActiveParticipantID,
     }),
-    [activeParticipantID, setActiveParticipantID]
+    [activeParticipantID, setActiveParticipantID],
   );
 
   return (

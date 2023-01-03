@@ -1,4 +1,6 @@
+import { NewBidRequest } from '@lotus/shared';
 import {
+  MessageBody,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
@@ -20,7 +22,14 @@ export class AppGateway implements OnGatewayInit {
   constructor(private readonly appService: AppService) {}
 
   afterInit(server: Server) {
-    this.appService.init(server);
+    const countdownBroadcast$ = this.appService.init();
+
+    countdownBroadcast$.subscribe((value) => {
+      server.emit('countdown', value);
+    });
+    setTimeout(() => {
+      this.appService.handleNewBid({ participantID: 2, previousBidID: null });
+    }, 1000);
   }
 
   @SubscribeMessage('getPaticipants')
@@ -28,8 +37,9 @@ export class AppGateway implements OnGatewayInit {
     return JSON.stringify(this.appService.getPaticipants());
   }
 
-  @SubscribeMessage('newBid')
-  handleNewBid(): string {
-    return JSON.stringify(this.appService.getPaticipants());
+  @SubscribeMessage('newBidRequest')
+  handleNewBid(@MessageBody() newBidRequest: NewBidRequest) {
+    const newBid = this.appService.handleNewBid(newBidRequest);
+    if (newBid) this.server.emit('newBid');
   }
 }

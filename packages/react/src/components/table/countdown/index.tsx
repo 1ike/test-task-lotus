@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useContext } from 'react';
+
+import { CountdownContext } from '../../../contexts/countdown';
 import styles from './countdown.module.scss';
 import { ReactComponent as TimerIcon } from './hourglass-outline.svg';
 
@@ -15,13 +17,11 @@ const formatTime = (secondsAll: number) => {
     return String(units);
   };
 
-  return `${timeUnitsToString(hours)}:${timeUnitsToString(
-    minutes
-  )}:${timeUnitsToString(seconds)}`;
+  return `${timeUnitsToString(hours)}:${timeUnitsToString(minutes)}:${timeUnitsToString(seconds)}`;
 };
 
 export function Countdown() {
-  const countdown = 112;
+  const { countdown } = useContext(CountdownContext);
   const formattedCountdown = formatTime(countdown);
 
   return (
