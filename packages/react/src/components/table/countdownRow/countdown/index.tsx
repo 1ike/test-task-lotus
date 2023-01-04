@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { CountdownContext } from '../../../contexts/countdown';
+import { CountdownContext } from '../../../../contexts/countdown';
 import styles from './countdown.module.scss';
 import { ReactComponent as TimerIcon } from './hourglass-outline.svg';
 

@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { Participant } from '@lotus/shared';
 
 import styles from './table.module.scss';
-import Countdown from './countdown';
 import { ParticipantsContext } from '../../contexts/paticipants';
+import CountdownRow from './countdownRow';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -22,26 +22,13 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 
 export function Table() {
   const { participants, loading } = useContext(ParticipantsContext);
-  const activeParticipantId = 2;
+  console.log('--- table render ---');
 
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead className={styles.head}>
-          <tr>
-            <th>Ход</th>
-            {participants.length === 0 && !loading ? (
-              <th>
-                <Countdown />
-              </th>
-            ) : (
-              participants.map((participant) => (
-                <th key={participant.id}>
-                  {participant.id === activeParticipantId && <Countdown />}
-                </th>
-              ))
-            )}
-          </tr>
+          <CountdownRow />
           <tr>
             <th>Параметры и требования</th>
             {!loading &&

@@ -23,6 +23,11 @@ export type Bid = {
 };
 
 export type NewBidRequest = {
-  previousBidID: BidID | null;
+  previousBidID: BidID | undefined;
   participantID: ParticipantID;
+};
+
+export type BroadcastData = {
+  countdown: Countdown;
+  bid?: Bid;
 };

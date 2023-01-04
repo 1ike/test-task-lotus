@@ -1,7 +1,7 @@
 import 'normalize.css';
 
 import { ParticipantsProvider } from '../contexts/paticipants';
-import { ActiveParticipantIDProvider } from '../contexts/activeParticipantID';
+import { BidProvider } from '../contexts/bid';
 import { CountdownProvider } from '../contexts/countdown';
 import styles from './app.module.scss';
 import Header from '../components/header';
@@ -11,7 +11,7 @@ import Table from './../components/table';
 export function App() {
   return (
     <ParticipantsProvider>
-      <ActiveParticipantIDProvider>
+      <BidProvider>
         <CountdownProvider>
           <Header
             title="Ход торгов"
@@ -26,7 +26,7 @@ export function App() {
           </main>
           <div />
         </CountdownProvider>
-      </ActiveParticipantIDProvider>
+      </BidProvider>
     </ParticipantsProvider>
   );
 }
