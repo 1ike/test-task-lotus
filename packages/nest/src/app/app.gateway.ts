@@ -22,7 +22,7 @@ export class AppGateway implements OnGatewayInit {
   constructor(private readonly appService: AppService) {}
 
   afterInit(server: Server) {
-    const countdownBroadcast$ = this.appService.init(server);
+    const countdownBroadcast$ = this.appService.init();
 
     countdownBroadcast$.subscribe((value) => {
       server.emit(SocketEvent.Countdown, value);

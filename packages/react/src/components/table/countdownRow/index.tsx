@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 
+import styles from './countdownRow.module.scss';
 import Countdown from './countdown';
 import { ParticipantsContext } from '../../../contexts/paticipants';
 import { BidContext } from '../../../contexts/bid';
@@ -13,7 +14,9 @@ export function CountdownRow() {
 
   return (
     <tr>
-      <th>Ход</th>
+      <th>
+        <div className={styles.header}>Ход</div>
+      </th>
       {participants.length === 0 && !loading ? (
         <th>
           <Countdown />

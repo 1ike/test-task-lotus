@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { take, map, Subject, tap, Subscription, timer } from 'rxjs';
 import { randomUUID } from 'crypto';
-import { Server } from 'socket.io';
 
 import { Countdown, Bid, NewBidRequest, ParticipantID, BroadcastData } from '@lotus/shared';
 import { participants } from '../assets/mockData';
@@ -24,8 +23,6 @@ const getRandomCountdownValue = () =>
 export class AppService {
   private bid: Bid;
 
-  private server: Server;
-
   private countdownBroadcast$: Subject<BroadcastData>;
 
   private countdown$: Subscription;
@@ -39,8 +36,7 @@ export class AppService {
     return participants;
   }
 
-  init(server: Server) {
-    this.server = server;
+  init() {
     this.startCountdown();
 
     return this.countdownBroadcast$;
@@ -66,13 +62,11 @@ export class AppService {
         take(countdownStartValue),
         map((value) => countdownStartValue - value),
         tap((value) => {
-          console.log('value = ', value);
           if (randomCountdownBreakpoint === value) {
             const newBid = {
               previousBidID: this.bid.id,
               participantID: getRandomActiveParticipantID(this.bid.participantID),
             };
-            console.log('newBid.participantID = ', newBid.participantID);
             this.handleNewBid(newBid);
           } else {
             this.countdownBroadcast$.next({

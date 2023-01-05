@@ -5,6 +5,7 @@ import { Participant } from '@lotus/shared';
 import styles from './table.module.scss';
 import { ParticipantsContext } from '../../contexts/paticipants';
 import CountdownRow from './countdownRow';
+import ColumnNamesRow from './columnNamesRow';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -29,17 +30,7 @@ export function Table() {
       <table className={styles.table}>
         <thead className={styles.head}>
           <CountdownRow />
-          <tr>
-            <th>Параметры и требования</th>
-            {!loading &&
-              participants.map((participant) => (
-                <th key={participant.id}>
-                  Участник №{participant.id}
-                  <br />
-                  <span className={styles.participantName}>{participant.name}</span>
-                </th>
-              ))}
-          </tr>
+          <ColumnNamesRow />
         </thead>
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (
