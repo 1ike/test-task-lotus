@@ -10,8 +10,6 @@ export function CountdownRow() {
   const { bid } = useContext(BidContext);
   const activeParticipantID = bid?.participantID;
 
-  console.log('--- CountdownRow render ---');
-
   return (
     <tr>
       <th>

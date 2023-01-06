@@ -8,8 +8,6 @@ export function ColumnNamesRow() {
   const { participants, loading } = useContext(ParticipantsContext);
   const { requestNewBid, bid } = useContext(BidContext);
 
-  console.log('--- CountdownRow render ---');
-
   return (
     <tr>
       <th>Параметры и требования</th>

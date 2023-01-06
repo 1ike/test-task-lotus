@@ -23,7 +23,6 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 
 export function Table() {
   const { participants, loading } = useContext(ParticipantsContext);
-  console.log('--- table render ---');
 
   return (
     <div className={styles.tableWrapper}>
