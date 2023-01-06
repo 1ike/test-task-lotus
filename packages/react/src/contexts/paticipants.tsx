@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { Participants } from '@lotus/shared';
+import { Participants, SocketEvent } from '@lotus/shared';
 
-import { BusEvent, eventBus } from '../api';
+import { socket } from '../api';
 
 const initialParticipants: Participants = [];
 const initialLoading = true;
@@ -21,18 +21,19 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(initialLoading);
 
   const listener = useCallback(
-    ({ detail: data }: { detail: Participants }) => {
-      setLoading(false);
-      setParticipantsState(data);
-    },
+    () =>
+      socket.emit(SocketEvent.GetPaticipants, undefined, (json: string) => {
+        setLoading(false);
+        setParticipantsState(JSON.parse(json));
+      }),
     [setLoading, setParticipantsState],
   );
 
   useEffect(() => {
-    eventBus.addListener<Participants>(BusEvent.SetParticipants, listener);
+    socket.on(SocketEvent.Connect, listener);
 
     return () => {
-      eventBus.removeListener<Participants>(BusEvent.SetParticipants, listener);
+      socket.off(SocketEvent.Connect, listener);
     };
   }, [listener]);
 

@@ -1,6 +1,6 @@
-import { BroadcastData } from '@lotus/shared';
+import { BroadcastData, SocketEvent } from '@lotus/shared';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { BusEvent, eventBus } from '../api';
+import { socket } from '../api';
 
 export type Countdown = number;
 
@@ -17,17 +17,17 @@ export function CountdownProvider({ children }: PropsWithChildren) {
   const [countdown, setCountdownState] = useState<Countdown>(initialCountdown);
 
   const listener = useCallback(
-    ({ detail: broadcastData }: { detail: BroadcastData }) => {
+    (broadcastData: BroadcastData) => {
       setCountdownState(broadcastData.countdown);
     },
     [setCountdownState],
   );
 
   useEffect(() => {
-    eventBus.addListener<BroadcastData>(BusEvent.Countdown, listener);
+    socket.on(SocketEvent.Countdown, listener);
 
     return () => {
-      eventBus.removeListener<BroadcastData>(BusEvent.Countdown, listener);
+      socket.off(SocketEvent.Countdown, listener);
     };
   }, [listener]);
 

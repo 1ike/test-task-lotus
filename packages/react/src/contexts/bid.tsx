@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { Bid, ParticipantID, BroadcastData, NewBidRequest } from '@lotus/shared';
-import { BusEvent, eventBus } from '../api';
+import { Bid, ParticipantID, BroadcastData, NewBidRequest, SocketEvent } from '@lotus/shared';
+import { socket } from '../api';
 
 type BidContextType = {
   bid?: Bid;
@@ -17,23 +17,23 @@ export function BidProvider({ children }: PropsWithChildren) {
         previousBidID: bid?.id,
         participantID,
       };
-      eventBus.dispatch(BusEvent.MakeBid, params);
+      socket.emit(SocketEvent.MakeNewBid, params);
     },
     [bid],
   );
 
   const listener = useCallback(
-    ({ detail: broadcastData }: { detail: BroadcastData }) => {
+    (broadcastData: BroadcastData) => {
       if (broadcastData.bid && broadcastData.bid.id !== bid?.id) setBid(broadcastData.bid);
     },
     [setBid, bid],
   );
 
   useEffect(() => {
-    eventBus.addListener<BroadcastData>(BusEvent.Countdown, listener);
+    socket.on(SocketEvent.Countdown, listener);
 
     return () => {
-      eventBus.removeListener<BroadcastData>(BusEvent.Countdown, listener);
+      socket.off(SocketEvent.Countdown, listener);
     };
   }, [listener]);
 
