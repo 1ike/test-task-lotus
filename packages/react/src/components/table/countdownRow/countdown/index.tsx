@@ -22,6 +22,9 @@ const formatTime = (secondsAll: number) => {
 
 export function Countdown() {
   const { countdown } = useContext(CountdownContext);
+
+  if (!countdown) return null;
+
   const formattedCountdown = formatTime(countdown);
 
   return (

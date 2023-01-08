@@ -20,14 +20,12 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
 
   const [loading, setLoading] = useState(initialLoading);
 
-  const listener = useCallback(
-    () => {
-        socket.emit(SocketEvent.GetPaticipants, undefined, (json: string) => {
-        setLoading(false);
-        setParticipantsState(JSON.parse(json));
-      })},
-    [setLoading, setParticipantsState],
-  );
+  const listener = useCallback(() => {
+    socket.emit(SocketEvent.GetPaticipants, undefined, (json: string) => {
+      setLoading(false);
+      setParticipantsState(JSON.parse(json));
+    });
+  }, [setLoading, setParticipantsState]);
 
   useEffect(() => {
     socket.on(SocketEvent.Connect, listener);

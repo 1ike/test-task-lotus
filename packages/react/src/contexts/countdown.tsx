@@ -4,17 +4,13 @@ import { socket } from '../api';
 
 export type Countdown = number;
 
-const initialCountdown = 120;
-
 type CountdownContextType = {
-  countdown: Countdown;
+  countdown?: Countdown;
 };
-export const CountdownContext = React.createContext<CountdownContextType>({
-  countdown: initialCountdown,
-});
+export const CountdownContext = React.createContext<CountdownContextType>({});
 
 export function CountdownProvider({ children }: PropsWithChildren) {
-  const [countdown, setCountdownState] = useState<Countdown>(initialCountdown);
+  const [countdown, setCountdownState] = useState<Countdown>();
 
   const listener = useCallback(
     (broadcastData: BroadcastData) => {
