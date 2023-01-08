@@ -5,31 +5,57 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/vite:build",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/packages/react"
+        "compiler": "babel",
+        "outputPath": "dist/packages/react",
+        "index": "packages/react/src/index.html",
+        "baseHref": "/",
+        "main": "packages/react/src/main.tsx",
+        "polyfills": "packages/react/src/polyfills.ts",
+        "tsConfig": "packages/react/tsconfig.app.json",
+        "assets": [
+          "packages/react/src/favicon.ico"
+        ],
+        "styles": ["packages/react/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
       },
       "configurations": {
         "development": {
-          "mode": "development"
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
         },
         "production": {
-          "mode": "production"
+          "fileReplacements": [
+            {
+              "replace": "packages/react/src/environments/environment.ts",
+              "with": "packages/react/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
         }
       }
     },
     "serve": {
-      "executor": "@nrwl/vite:dev-server",
+      "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "react:build"
+        "buildTarget": "react:build",
+        "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "react:build:development",
-          "hmr": true
+          "buildTarget": "react:build:development"
         },
         "production": {
           "buildTarget": "react:build:production",
@@ -37,19 +63,19 @@
         }
       }
     },
-    "test": {
-      "executor": "@nrwl/vite:test",
-      "outputs": ["{projectRoot}/coverage"],
-      "options": {
-        "passWithNoTests": true,
-        "reportsDirectory": "{workspaceRoot}/coverage/{projectRoot}"
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/react/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/react/jest.config.ts",
+        "passWithNoTests": true
       }
     }
   },

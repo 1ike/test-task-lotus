@@ -21,11 +21,11 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(initialLoading);
 
   const listener = useCallback(
-    () =>
-      socket.emit(SocketEvent.GetPaticipants, undefined, (json: string) => {
+    () => {
+        socket.emit(SocketEvent.GetPaticipants, undefined, (json: string) => {
         setLoading(false);
         setParticipantsState(JSON.parse(json));
-      }),
+      })},
     [setLoading, setParticipantsState],
   );
 

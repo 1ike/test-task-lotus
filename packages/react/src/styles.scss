@@ -8,10 +8,10 @@
 
   /* Браузер сначала попробует найти шрифт локально */
   src: local('Roboto Condensed'),
-    /* Если не получилось, загрузит woff2 */ url('/fonts/Robotocondensed.woff2')
+    /* Если не получилось, загрузит woff2 */ url('./fonts/Robotocondensed.woff2')
       format('woff2'),
     /* Если браузер не поддерживает woff2, загрузит woff */
-      url('/fonts/Robotocondensed.woff') format('woff');
+      url('./fonts/Robotocondensed.woff') format('woff');
 }
 
 @font-face {
@@ -22,9 +22,9 @@
   /* Браузер сначала попробует найти шрифт локально */
   src: local('Roboto Condensed'),
     /* Если не получилось, загрузит woff2 */
-      url('/fonts/Robotocondensedbold.woff2') format('woff2'),
+      url('./fonts/Robotocondensedbold.woff2') format('woff2'),
     /* Если браузер не поддерживает woff2, загрузит woff */
-      url('/fonts/Robotocondensedbold.woff') format('woff');
+      url('./fonts/Robotocondensedbold.woff') format('woff');
 }
 
 /**
