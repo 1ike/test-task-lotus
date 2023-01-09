@@ -1,5 +1,8 @@
 ### STAGE 1: Build ###
-FROM node:16-alpine as builder
+FROM node:16-alpine AS builder
+
+ARG URL
+ARG PORT
 
 WORKDIR /app
 
@@ -9,7 +12,9 @@ RUN npm ci
 
 COPY . .
 
-RUN npx nx run-many --target=build
+RUN NX_SERVER_URL=$URL \
+  NX_SERVER_PORT=$PORT \
+  npx nx run-many --target=build
 
 
 ### STAGE 2: Production Environment ###
@@ -23,7 +28,4 @@ COPY package*.json ./
 
 RUN npm ci --omit=dev
 
-
-EXPOSE 3333
-
-CMD [ "node", "dist/packages/nest/main.js"]
+CMD ["node", "dist/packages/nest/main.js"]

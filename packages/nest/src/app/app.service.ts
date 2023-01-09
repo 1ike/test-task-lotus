@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { take, map, Subject, tap, Subscription, timer } from 'rxjs';
 import { randomUUID } from 'crypto';
 
+import { ConfigService } from '@nestjs/config';
+
 import { Countdown, Bid, NewBidRequest, ParticipantID, BroadcastData } from '@lotus/shared';
 import { participants } from '../assets/mockData';
-
-const countdownStartValue: Countdown = 15;
 
 const participantIDs = participants.map((p) => p.id);
 
@@ -14,21 +14,24 @@ const getRandomActiveParticipantID = (currentId: ParticipantID) => {
   return filteredIDs[Math.floor(Math.random() * filteredIDs.length)];
 };
 
-const getRandomCountdownValue = () =>
+const getRandomCountdownValue = (countdownStartValue: Countdown) =>
   Math.floor(
     countdownStartValue - Math.random() * (countdownStartValue - countdownStartValue * 0.1),
   );
 
 @Injectable()
 export class AppService {
+  private readonly TIMER: Countdown;
+
   private bid: Bid;
 
   private countdownBroadcast$: Subject<BroadcastData>;
 
   private countdown$: Subscription;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.countdownBroadcast$ = new Subject<BroadcastData>();
+    this.TIMER = this.configService.get<Countdown>('TIMER');
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -56,7 +59,9 @@ export class AppService {
   private startCountdown() {
     this.countdown$?.unsubscribe();
 
-    const randomCountdownBreakpoint = getRandomCountdownValue();
+    const countdownStartValue = this.TIMER;
+
+    const randomCountdownBreakpoint = getRandomCountdownValue(countdownStartValue);
     this.countdown$ = timer(0, 1000)
       .pipe(
         take(countdownStartValue),

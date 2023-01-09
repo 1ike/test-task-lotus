@@ -5,8 +5,8 @@ import { BidProvider } from '../contexts/bid';
 import { CountdownProvider } from '../contexts/countdown';
 import styles from './app.module.scss';
 import Header from '../components/header';
-import Warning from './../components/warning';
-import Table from './../components/table';
+import Warning from '../components/warning';
+import Table from '../components/table';
 
 export function App() {
   return (

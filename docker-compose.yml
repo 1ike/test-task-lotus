@@ -1,8 +1,15 @@
 version: "3"
 services:
   lotus:
-    build: .
+    build:
+      context: .
+      args:
+        - URL=$NX_SERVER_URL
+        - PORT=$NX_SERVER_PORT
     restart: always
+    environment:
+      - NX_SERVER_PORT=$NX_SERVER_PORT
+      - NX_NX_TIMER=$NX_TIMER
     ports:
-      - "3333:3333"
+      - $NX_SERVER_PORT:$NX_SERVER_PORT
     container_name: lotus
