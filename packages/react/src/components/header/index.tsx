@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import styles from './header.module.scss';
 
 export type HeaderProps = {
@@ -12,6 +14,7 @@ export function Header({ title, preTitle }: HeaderProps) {
         <span className={styles.header__preTitle}>{title}</span>
         {preTitle}
       </h1>
+      <Link to="/">На главную</Link>
     </header>
   );
 }

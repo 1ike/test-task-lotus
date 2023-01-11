@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { Participants, SocketEvent, JoinRoomRequest } from '@lotus/shared';
 import { useParams } from 'react-router-dom';
 
@@ -23,22 +23,14 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
 
   const { roomName } = useParams();
 
-  const listener = useCallback(() => {
+  useEffect(() => {
     socket.emit(SocketEvent.JoinRoom, roomName, (json: string) => {
       setLoading(false);
 
       const { participants: roomParticipants }: JoinRoomRequest = JSON.parse(json);
       setParticipantsState(roomParticipants);
     });
-  }, [setLoading, setParticipantsState, roomName]);
-
-  useEffect(() => {
-    socket.on(SocketEvent.Connect, listener);
-
-    return () => {
-      socket.off(SocketEvent.Connect, listener);
-    };
-  }, [listener]);
+  }, [roomName]);
 
   const value = useMemo(
     () => ({

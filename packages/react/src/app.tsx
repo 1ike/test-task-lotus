@@ -1,10 +1,15 @@
 import 'normalize.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Tender from '../pages/tender';
-import NotFound from '../pages/notFound';
+import Home from './pages/home';
+import Tender from './pages/tender';
+import NotFound from './pages/notFound';
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+  },
   {
     path: '/room/:roomName',
     element: <Tender />,
