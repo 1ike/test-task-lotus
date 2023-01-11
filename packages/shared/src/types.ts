@@ -15,7 +15,13 @@ export type Participants = Participant[];
 
 export type Countdown = number;
 
+export type RoomName = string;
+
 export type BidID = string;
+
+export type JoinRoomRequest = {
+  participants: Participants;
+};
 
 export type Bid = {
   id: BidID;
@@ -25,6 +31,7 @@ export type Bid = {
 export type NewBidRequest = {
   previousBidID: BidID | undefined;
   participantID: ParticipantID;
+  roomName: RoomName;
 };
 
 export type BroadcastData = {

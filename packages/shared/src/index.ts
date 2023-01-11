@@ -2,7 +2,7 @@ export * from './types';
 
 export enum SocketEvent {
   Connect = 'connect',
-  GetPaticipants = 'getPaticipants',
+  JoinRoom = 'joinRoom',
   Countdown = 'countdown',
   MakeNewBid = 'makeNewBid',
 }

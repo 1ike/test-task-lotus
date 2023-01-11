@@ -1,4 +1,6 @@
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Bid, ParticipantID, BroadcastData, NewBidRequest, SocketEvent } from '@lotus/shared';
 import { socket } from '../api';
 
@@ -11,15 +13,20 @@ export const BidContext = React.createContext<BidContextType>({});
 export function BidProvider({ children }: PropsWithChildren) {
   const [bid, setBid] = useState<BidContextType['bid']>();
 
+  const { roomName } = useParams();
+
   const requestNewBid = useCallback(
     (participantID: ParticipantID) => {
+      if (!roomName) return;
+
       const params: NewBidRequest = {
         previousBidID: bid?.id,
         participantID,
+        roomName,
       };
       socket.emit(SocketEvent.MakeNewBid, params);
     },
-    [bid],
+    [bid, roomName],
   );
 
   const listener = useCallback(

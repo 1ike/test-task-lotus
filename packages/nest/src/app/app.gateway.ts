@@ -1,12 +1,13 @@
-import { NewBidRequest, SocketEvent } from '@lotus/shared';
+import { JoinRoomRequest, NewBidRequest, RoomName, SocketEvent } from '@lotus/shared';
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 import { AppService } from './app.service';
 
@@ -22,19 +23,18 @@ export class AppGateway implements OnGatewayInit {
   constructor(private readonly appService: AppService) {}
 
   afterInit(server: Server) {
-    const countdownBroadcast$ = this.appService.init();
-
-    countdownBroadcast$.subscribe((value) => {
-      server.emit(SocketEvent.Countdown, value);
-    });
-    setTimeout(() => {
-      this.appService.handleNewBid({ participantID: 2, previousBidID: null });
-    }, 1000);
+    this.appService.init(server);
   }
 
-  @SubscribeMessage(SocketEvent.GetPaticipants)
-  getPaticipants(): string {
-    return JSON.stringify(this.appService.getPaticipants());
+  @SubscribeMessage(SocketEvent.JoinRoom)
+  joinRoom(@MessageBody() roomName: RoomName, @ConnectedSocket() client: Socket): string {
+    client.join(roomName);
+
+    const responseData: JoinRoomRequest = {
+      participants: this.appService.getPaticipants(roomName),
+    };
+
+    return JSON.stringify(responseData);
   }
 
   @SubscribeMessage(SocketEvent.MakeNewBid)

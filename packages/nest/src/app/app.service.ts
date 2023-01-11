@@ -3,8 +3,17 @@ import { take, map, Subject, tap, Subscription, timer } from 'rxjs';
 import { randomUUID } from 'crypto';
 
 import { ConfigService } from '@nestjs/config';
+import { Server } from 'socket.io';
 
-import { Countdown, Bid, NewBidRequest, ParticipantID, BroadcastData } from '@lotus/shared';
+import {
+  Countdown,
+  Bid,
+  NewBidRequest,
+  ParticipantID,
+  BroadcastData,
+  RoomName,
+  SocketEvent,
+} from '@lotus/shared';
 import { participants } from '../assets/mockData';
 
 const participantIDs = participants.map((p) => p.id);
@@ -19,64 +28,91 @@ const getRandomCountdownValue = (countdownStartValue: Countdown) =>
     countdownStartValue - Math.random() * (countdownStartValue - countdownStartValue * 0.1),
   );
 
+type Room = {
+  countdownBroadcast$: Subject<BroadcastData>;
+  countdownStartValue: Countdown;
+  countdown$?: Subscription;
+  bid?: Bid;
+};
+
 @Injectable()
 export class AppService {
-  private readonly TIMER: Countdown;
-
-  private bid: Bid;
-
-  private countdownBroadcast$: Subject<BroadcastData>;
-
-  private countdown$: Subscription;
+  private rooms: Map<RoomName, Room>;
 
   constructor(private configService: ConfigService) {
-    this.countdownBroadcast$ = new Subject<BroadcastData>();
-    this.TIMER = this.configService.get<Countdown>('TIMER');
+    const countdownStartValue = this.configService.get<Countdown>('TIMER');
+    const name = this.configService.get<RoomName>('ROOM_NAME');
+    this.rooms = new Map();
+    this.makeRoom({ name, countdownStartValue });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getPaticipants() {
-    return participants;
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+  getPaticipants(roomName) {
+    return participants; // stub
   }
 
-  init() {
-    this.startCountdown();
+  makeRoom({ name, countdownStartValue }: { name: RoomName; countdownStartValue: Countdown }) {
+    this.rooms.set(name, {
+      countdownBroadcast$: new Subject<BroadcastData>(),
+      countdownStartValue,
+    });
 
-    return this.countdownBroadcast$;
+    return name;
+  }
+
+  init(server: Server) {
+    this.rooms.forEach(({ countdownBroadcast$ }, roomName) => {
+      this.startCountdown(roomName);
+
+      countdownBroadcast$.subscribe((value) => {
+        server.to(roomName).emit(SocketEvent.Countdown, value);
+      });
+    });
   }
 
   handleNewBid(newBidRequest: NewBidRequest) {
-    if (this.bid && this.bid.id !== newBidRequest.previousBidID) return;
+    const room = this.rooms.get(newBidRequest.roomName);
 
-    this.bid = {
+    if (!room) return;
+
+    const { bid } = room;
+
+    if (bid && bid.id !== newBidRequest.previousBidID) return;
+
+    room.bid = {
       id: randomUUID(),
       participantID: newBidRequest.participantID,
     };
 
-    this.startCountdown();
+    this.startCountdown(newBidRequest.roomName);
   }
 
-  private startCountdown() {
-    this.countdown$?.unsubscribe();
+  private startCountdown(roomName: RoomName) {
+    const room = this.rooms.get(roomName);
 
-    const countdownStartValue = this.TIMER;
+    if (!room) return;
 
-    const randomCountdownBreakpoint = getRandomCountdownValue(countdownStartValue);
-    this.countdown$ = timer(0, 1000)
+    const { bid } = room;
+
+    room.countdown$?.unsubscribe();
+
+    const randomCountdownBreakpoint = getRandomCountdownValue(room.countdownStartValue);
+    room.countdown$ = timer(0, 1000)
       .pipe(
-        take(countdownStartValue),
-        map((value) => countdownStartValue - value),
+        take(room.countdownStartValue),
+        map((value) => room.countdownStartValue - value),
         tap((value) => {
           if (randomCountdownBreakpoint === value) {
             const newBid = {
-              previousBidID: this.bid.id,
-              participantID: getRandomActiveParticipantID(this.bid.participantID),
+              previousBidID: bid?.id,
+              participantID: getRandomActiveParticipantID(bid?.participantID),
+              roomName,
             };
             this.handleNewBid(newBid);
           } else {
-            this.countdownBroadcast$.next({
+            room.countdownBroadcast$.next({
               countdown: value,
-              bid: this.bid,
+              bid,
             });
           }
         }),
