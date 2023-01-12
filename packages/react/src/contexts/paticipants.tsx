@@ -30,6 +30,10 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
       const { participants: roomParticipants }: JoinRoomRequest = JSON.parse(json);
       setParticipantsState(roomParticipants);
     });
+
+    return () => {
+      socket.emit(SocketEvent.LeaveRoom, roomName);
+    };
   }, [roomName]);
 
   const value = useMemo(

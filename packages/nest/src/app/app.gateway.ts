@@ -37,6 +37,12 @@ export class AppGateway implements OnGatewayInit {
     return JSON.stringify(responseData);
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  @SubscribeMessage(SocketEvent.LeaveRoom)
+  leaveRoom(@MessageBody() roomName: RoomName, @ConnectedSocket() client: Socket): void {
+    client.leave(roomName);
+  }
+
   @SubscribeMessage(SocketEvent.MakeNewBid)
   handleNewBid(@MessageBody() newBidRequest: NewBidRequest) {
     this.appService.handleNewBid(newBidRequest);
