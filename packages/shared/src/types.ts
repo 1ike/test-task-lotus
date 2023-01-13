@@ -19,7 +19,7 @@ export type RoomName = string;
 
 export type BidID = string;
 
-export type JoinRoomRequest = {
+export type JoinRoomResponse = {
   participants: Participants;
 };
 
@@ -37,4 +37,9 @@ export type NewBidRequest = {
 export type BroadcastData = {
   countdown: Countdown;
   bid?: Bid;
+};
+
+export type CreateRoomRequest = {
+  name: RoomName;
+  countdownStartValue?: Countdown;
 };

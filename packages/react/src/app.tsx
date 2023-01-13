@@ -1,7 +1,7 @@
 import 'normalize.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Home from './pages/home';
+import Home, { loader, action } from './pages/home';
 import Tender from './pages/tender';
 import NotFound from './pages/notFound';
 
@@ -9,6 +9,8 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
+    loader,
+    action,
   },
   {
     path: '/room/:roomName',

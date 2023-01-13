@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { Participants, SocketEvent, JoinRoomRequest } from '@lotus/shared';
+import { Participants, SocketEvent, JoinRoomResponse } from '@lotus/shared';
 import { useParams } from 'react-router-dom';
 
 import { socket } from '../api';
@@ -27,7 +27,7 @@ export function ParticipantsProvider({ children }: PropsWithChildren) {
     socket.emit(SocketEvent.JoinRoom, roomName, (json: string) => {
       setLoading(false);
 
-      const { participants: roomParticipants }: JoinRoomRequest = JSON.parse(json);
+      const { participants: roomParticipants }: JoinRoomResponse = JSON.parse(json);
       setParticipantsState(roomParticipants);
     });
 

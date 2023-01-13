@@ -1,4 +1,4 @@
-import { JoinRoomRequest, NewBidRequest, RoomName, SocketEvent } from '@lotus/shared';
+import { JoinRoomResponse, NewBidRequest, RoomName, SocketEvent } from '@lotus/shared';
 import {
   ConnectedSocket,
   MessageBody,
@@ -18,7 +18,7 @@ import { AppService } from './app.service';
 })
 export class AppGateway implements OnGatewayInit {
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   constructor(private readonly appService: AppService) {}
 
@@ -30,7 +30,7 @@ export class AppGateway implements OnGatewayInit {
   joinRoom(@MessageBody() roomName: RoomName, @ConnectedSocket() client: Socket): string {
     client.join(roomName);
 
-    const responseData: JoinRoomRequest = {
+    const responseData: JoinRoomResponse = {
       participants: this.appService.getPaticipants(roomName),
     };
 

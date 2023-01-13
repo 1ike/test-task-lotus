@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { take, map, Subject, tap, Subscription, timer } from 'rxjs';
 import { randomUUID } from 'crypto';
 
@@ -13,12 +13,14 @@ import {
   BroadcastData,
   RoomName,
   SocketEvent,
+  CreateRoomRequest,
 } from '@lotus/shared';
 import { participants } from '../assets/mockData';
+import { Config } from './config/configuration';
 
 const participantIDs = participants.map((p) => p.id);
 
-const getRandomActiveParticipantID = (currentId: ParticipantID) => {
+const getRandomActiveParticipantID = (currentId?: ParticipantID) => {
   const filteredIDs = participantIDs.filter((id) => id !== currentId);
   return filteredIDs[Math.floor(Math.random() * filteredIDs.length)];
 };
@@ -39,34 +41,59 @@ type Room = {
 export class AppService {
   private rooms: Map<RoomName, Room>;
 
-  constructor(private configService: ConfigService) {
-    const countdownStartValue = this.configService.get<Countdown>('TIMER');
-    const name = this.configService.get<RoomName>('ROOM_NAME');
+  private readonly TIMER: Countdown;
+
+  private server!: Server;
+
+  constructor(private configService: ConfigService<Config>) {
+    const name = this.configService.get('ROOM_NAME', { infer: true })!;
+    const countdownStartValue = this.configService.get('TIMER', { infer: true })!;
+    this.TIMER = countdownStartValue;
     this.rooms = new Map();
-    this.makeRoom({ name, countdownStartValue });
+    this.createRoom({ name, countdownStartValue });
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-  getPaticipants(roomName) {
+  getPaticipants(roomName: RoomName) {
     return participants; // stub
   }
 
-  makeRoom({ name, countdownStartValue }: { name: RoomName; countdownStartValue: Countdown }) {
+  createRoom({ name, countdownStartValue = this.TIMER }: CreateRoomRequest) {
+    if (this.rooms.has(name)) throw new BadRequestException('Уже есть комната с таким именем.');
+
+    const countdownBroadcast$ = new Subject<BroadcastData>();
+
     this.rooms.set(name, {
-      countdownBroadcast$: new Subject<BroadcastData>(),
+      countdownBroadcast$,
       countdownStartValue,
     });
+
+    this.launchRoom(name, countdownBroadcast$);
 
     return name;
   }
 
-  init(server: Server) {
-    this.rooms.forEach(({ countdownBroadcast$ }, roomName) => {
-      this.startCountdown(roomName);
+  findAllRoomNames(): RoomName[] {
+    return Array.from(this.rooms.keys());
+  }
 
-      countdownBroadcast$.subscribe((value) => {
-        server.to(roomName).emit(SocketEvent.Countdown, value);
-      });
+  deleteRoom(roomName: RoomName) {
+    this.rooms.delete(roomName);
+  }
+
+  init(server: Server) {
+    this.server = server;
+
+    this.rooms.forEach(({ countdownBroadcast$ }, roomName) => {
+      this.launchRoom(roomName, countdownBroadcast$);
+    });
+  }
+
+  private launchRoom(roomName: RoomName, countdownBroadcast$: Subject<BroadcastData>) {
+    this.startCountdown(roomName);
+
+    countdownBroadcast$.subscribe((value) => {
+      this.server.to(roomName).emit(SocketEvent.Countdown, value);
     });
   }
 
