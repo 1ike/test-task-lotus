@@ -79,6 +79,7 @@ export class AppService {
 
   deleteRoom(roomName: RoomName) {
     this.rooms.delete(roomName);
+    return roomName;
   }
 
   init(server: Server) {

@@ -38,4 +38,5 @@ export const deleteRoom = (roomName: RoomName) =>
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+    return response.text();
   });

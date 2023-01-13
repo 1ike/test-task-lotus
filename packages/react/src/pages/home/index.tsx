@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { Link, Form, useLoaderData, ActionFunctionArgs } from 'react-router-dom';
 import { z } from 'zod';
 
-import { CreateRoomRequest, RoomName } from '@lotus/shared';
-import { DEFAULT_ROOM_NAME, TITLE_POSTFIX } from '../../config';
+import { RoomName } from '@lotus/shared';
+import { TITLE_POSTFIX, TIMER } from '../../config';
 import styles from './home.module.scss';
 import { fetchRoomNames, deleteRoom, createRoom } from '../../api';
 
@@ -19,9 +19,15 @@ export function Home() {
       <h1 className={styles.header}>Комнаты для торгов</h1>
       <section className={styles.rooms}>
         {addedRooms.map((roomName) => (
-          <Link key={roomName} to={`/room/${roomName}`}>
-            Войти в комнату {roomName}
-          </Link>
+          <div className={styles.room}>
+            <Link key={roomName} to={`/room/${roomName}`}>
+              Войти в комнату {roomName}
+            </Link>
+            <Form method="delete">
+              <input type="text" hidden name="deletingName" value={roomName} />
+              <button type="submit">Удалить комнату</button>
+            </Form>
+          </div>
         ))}
       </section>
       <Form method="post" className={styles.form}>
@@ -33,9 +39,9 @@ export function Home() {
         </label>
         {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
         <label className={styles.inputRaw}>
-          Задайте для нее время на ход торгов (в секундах). Заполнение необязательно (по умолчанию
-          120).
-          <input type="text" name="countdownStartValue" placeholder="120" />
+          Задайте для нее время на ход торгов (в секундах). Заполнение необязательно (по умолчанию{' '}
+          {TIMER}).
+          <input type="text" name="countdownStartValue" placeholder={TIMER} />
         </label>
         <button type="submit">Создать комнату</button>
       </Form>
@@ -64,7 +70,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         name: formData.get('name'),
         ...(countdownStartValue && { countdownStartValue }),
       });
-      console.log('validationResult = ', validationResult);
 
       if (!validationResult.success) return null;
 

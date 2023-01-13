@@ -17,6 +17,11 @@ $headersColor: #333;
   flex-direction: column;
   gap: 1rem;
 }
+.room {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
 .form {
   margin-top: 5rem;
