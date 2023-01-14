@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home, { loader, action } from './pages/home';
 import Tender from './pages/tender';
 import NotFound from './pages/notFound';
+import ErrorMessage from './components/errorMessage';
+import { ErrorMessageProvider } from './contexts/error';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +25,12 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorMessageProvider>
+      <RouterProvider router={router} />
+      <ErrorMessage />
+    </ErrorMessageProvider>
+  );
 }
 
 export default App;

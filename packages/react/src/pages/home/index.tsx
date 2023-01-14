@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, Form, useLoaderData, ActionFunctionArgs, useActionData } from 'react-router-dom';
 import { z } from 'zod';
 
@@ -6,22 +6,63 @@ import { RoomName, regexStringRawName, regexStringRawCountdownStartValue } from 
 import { TITLE_POSTFIX, TIMER } from '../../config';
 import styles from './home.module.scss';
 import { fetchRoomNames, deleteRoom, createRoom } from '../../api';
+import { ErrorMessageContext } from '../../contexts/error';
+
+/* eslint-disable @typescript-eslint/indent */
+type LoaderResponse =
+  | {
+      success: true;
+      data: RoomName[];
+    }
+  | {
+      success: false;
+      error: Error;
+    };
+/* eslint-enable @typescript-eslint/indent */
+/* eslint-disable @typescript-eslint/indent */
+type ActionResponse =
+  | {
+      success: true;
+      data: RoomName;
+    }
+  | {
+      success: false;
+      error: Error;
+    };
+/* eslint-enable @typescript-eslint/indent */
 
 const defaultTextInputValue = '';
 
 export function Home() {
-  const addedRooms = useLoaderData() as RoomName[];
-  const newRoomName = useActionData();
+  const loaderResponse = useLoaderData() as LoaderResponse;
+  const actionResponse = useActionData() as ActionResponse | undefined;
 
+  const [addedRooms, setAddedRooms] = useState<RoomName[]>([]);
   const [name, setName] = useState(defaultTextInputValue);
   const [countdownStartValue, setCountdownStartValue] = useState(defaultTextInputValue);
 
+  const { setErrorMessage, resetErrorMessage } = useContext(ErrorMessageContext);
+
   useEffect(() => {
-    if (newRoomName) {
-      setName(defaultTextInputValue);
-      setCountdownStartValue(defaultTextInputValue);
+    if (actionResponse) {
+      if (actionResponse.success) {
+        setName(defaultTextInputValue);
+        setCountdownStartValue(defaultTextInputValue);
+      } else {
+        setErrorMessage?.(actionResponse.error.message);
+      }
     }
-  }, [newRoomName]);
+    if (loaderResponse.success) {
+      setAddedRooms(loaderResponse.data);
+    } else {
+      setErrorMessage?.(`Ошибка загрузки списка комнат ${loaderResponse.error.message}`);
+    }
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      resetErrorMessage?.();
+    };
+  }, [actionResponse, loaderResponse, setErrorMessage, resetErrorMessage]);
 
   useEffect(() => {
     document.title = `Главная${TITLE_POSTFIX}`;
@@ -78,17 +119,35 @@ export function Home() {
 export default Home;
 
 export const loader = async () => {
-  return fetchRoomNames();
+  try {
+    const data = await fetchRoomNames();
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('неизвестная ошибка'),
+    };
+  }
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs): Promise<ActionResponse> => {
   switch (request.method) {
     case 'POST': {
       const formData = await request.formData();
 
       const Schema = z.object({
-        name: z.string().min(1).regex(new RegExp(regexStringRawName)),
-        countdownStartValue: z.coerce.number().optional(),
+        name: z
+          .string()
+          .min(1, 'имя не должно быть пустым')
+          .regex(new RegExp(regexStringRawName), 'имя не должно содержать недопустимых символов'),
+        countdownStartValue: z.coerce
+          .number({
+            invalid_type_error: 'время на ход торгов должно быть числом',
+          })
+          .optional(),
       });
 
       const countdownStartValue = formData.get('countdownStartValue');
@@ -97,18 +156,50 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         ...(countdownStartValue && { countdownStartValue }),
       });
 
-      if (!validationResult.success) return null;
+      if (!validationResult.success) {
+        const errorMessage = validationResult.error.issues.map((e) => e.message).join(', ');
+        return {
+          success: false,
+          error: new Error(`Ошибки валидации: ${errorMessage}.`),
+        };
+      }
 
-      return createRoom(validationResult.data);
+      try {
+        const data = await createRoom(validationResult.data);
+        return {
+          success: true,
+          data,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error : new Error('неизвестная ошибка'),
+        };
+      }
     }
     case 'DELETE': {
       const formData = await request.formData();
       const name = formData.get('deletingName') as RoomName;
-      return deleteRoom(name);
+
+      try {
+        const data = await deleteRoom(name);
+        return {
+          success: true,
+          data,
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error instanceof Error ? error : new Error('неизвестная ошибка'),
+        };
+      }
     }
     default: {
       // eslint-disable-next-line @typescript-eslint/no-throw-literal
-      throw new Response('', { status: 405 });
+      return {
+        success: false,
+        error: new Error('неизвестная ошибка'),
+      };
     }
   }
 };

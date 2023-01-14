@@ -2,6 +2,8 @@ export * from './types';
 
 export enum SocketEvent {
   Connect = 'connect',
+  ConnectError = 'connect_error',
+  Disconnect = 'disconnect',
   JoinRoom = 'joinRoom',
   LeaveRoom = 'leaveRoom',
   Countdown = 'countdown',
