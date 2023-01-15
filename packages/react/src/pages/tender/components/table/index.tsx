@@ -5,6 +5,8 @@ import ColumnNamesRow from './columnNamesRow';
 import { useAppSelector } from '../../../../state/store';
 import { selectParticipants } from '../../state/tender';
 import { useJoinRoom } from '../../hooks/useJoinRoom';
+import { useSubscribeBid } from '../../hooks/useSubscribeBid';
+import { useSubscribeCountdown } from '../../hooks/useSubscribeCountdown';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -22,6 +24,9 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 
 export function Table() {
   const loading = useJoinRoom();
+  const requestNewBid = useSubscribeBid();
+  useSubscribeCountdown();
+
   const participants = useAppSelector(selectParticipants);
 
   return (
@@ -29,7 +34,11 @@ export function Table() {
       <table className={styles.table}>
         <thead className={styles.head}>
           <CountdownRow participants={participants} loading={loading} />
-          <ColumnNamesRow participants={participants} loading={loading} />
+          <ColumnNamesRow
+            participants={participants}
+            loading={loading}
+            requestNewBid={requestNewBid}
+          />
         </thead>
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { CountdownProvider } from './contexts/countdown';
 import styles from './tender.module.scss';
 import Header from './components/header';
 import Warning from './components/warning';
@@ -15,7 +14,7 @@ export function Tender() {
   }, [roomName]);
 
   return (
-    <CountdownProvider>
+    <>
       <Header
         title="Ход торгов"
         preTitle="Тестовые торги на аппарат ЛОТОС №2033564 (09.11.2020 07:00)"
@@ -27,7 +26,7 @@ export function Tender() {
         />
         <Table />
       </main>
-    </CountdownProvider>
+    </>
   );
 }
 

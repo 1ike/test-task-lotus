@@ -31,7 +31,7 @@ export class AppGateway implements OnGatewayInit {
     client.join(roomName);
 
     const responseData: JoinRoomResponse = {
-      participants: this.appService.getPaticipants(roomName),
+      participants: this.appService.getParticipants(roomName),
     };
 
     return JSON.stringify(responseData);

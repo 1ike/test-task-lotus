@@ -6,7 +6,7 @@ import { socket } from '../../../api';
 import { useAppDispatch, useAppSelector } from '../../../state/store';
 import { selectBid, tenderActions } from '../state/tender';
 
-export function useBid() {
+export function useSubscribeBid() {
   const dispatch = useAppDispatch();
   const bid = useAppSelector(selectBid);
 

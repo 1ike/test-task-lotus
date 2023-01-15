@@ -57,7 +57,7 @@ export class AppService {
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-  getPaticipants(roomName: RoomName) {
+  getParticipants(roomName: RoomName) {
     return participants; // stub
   }
 

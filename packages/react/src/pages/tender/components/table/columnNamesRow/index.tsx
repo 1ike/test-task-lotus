@@ -1,18 +1,19 @@
 import { PropsWithChildren } from 'react';
 
-import { Participants } from '@lotus/shared';
+import { ParticipantID, Participants } from '@lotus/shared';
 import styles from './columnNamesRow.module.scss';
 import { Loading } from '../../../hooks/useJoinRoom';
-import { useBid } from '../../../hooks/useBid';
 import { useAppSelector } from '../../../../../state/store';
 import { selectBid } from '../../../state/tender';
 
-type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
+type Props = {
+  participants?: Participants;
+  loading?: Loading;
+  requestNewBid: (id: ParticipantID) => void;
+} & PropsWithChildren;
 
-export function ColumnNamesRow({ participants, loading }: Props) {
+export function ColumnNamesRow({ participants, loading, requestNewBid }: Props) {
   const bid = useAppSelector(selectBid);
-
-  const requestNewBid = useBid();
 
   return (
     <tr>
@@ -26,7 +27,7 @@ export function ColumnNamesRow({ participants, loading }: Props) {
               className={isActive ? styles.participantActive : styles.participant}
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...(!isActive && {
-                onClick: () => requestNewBid?.(id),
+                onClick: () => requestNewBid(id),
               })}
             >
               Участник №{id}
