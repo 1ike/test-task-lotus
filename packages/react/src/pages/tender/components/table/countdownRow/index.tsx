@@ -13,7 +13,14 @@ export function CountdownRow() {
   return (
     <tr>
       <th>
-        <div className={styles.header}>{activeParticipantID ? 'Ход' : <Countdown />}</div>
+        <div className={styles.header}>
+          Ход
+          {!activeParticipantID && (
+            <div className={styles.noBid}>
+              <Countdown />
+            </div>
+          )}
+        </div>
       </th>
       {participants.length === 0 && !loading ? (
         <th>

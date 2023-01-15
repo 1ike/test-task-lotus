@@ -78,7 +78,7 @@ export function Home() {
             <Form method="delete">
               <input type="text" hidden name="deletingName" value={roomName} readOnly />
               {roomName === DEFAULT_ROOM_NAME ? (
-                'Комната по умолчанию'
+                '(Комната по умолчанию)'
               ) : (
                 <button type="submit">Удалить комнату</button>
               )}

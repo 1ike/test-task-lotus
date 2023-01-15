@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } f
 import { Participants, SocketEvent, JoinRoomResponse } from '@lotus/shared';
 import { useParams } from 'react-router-dom';
 
-import { socket } from '../api';
+import { socket } from '../../../api';
 
 const initialParticipants: Participants = [];
 const initialLoading = true;

@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } f
 import { useParams } from 'react-router-dom';
 
 import { Bid, ParticipantID, BroadcastData, NewBidRequest, SocketEvent } from '@lotus/shared';
-import { socket } from '../api';
+import { socket } from '../../../api';
 
 type BidContextType = {
   bid?: Bid;

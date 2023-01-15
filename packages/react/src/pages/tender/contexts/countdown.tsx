@@ -1,6 +1,6 @@
 import { BroadcastData, SocketEvent } from '@lotus/shared';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
-import { socket } from '../api';
+import { socket } from '../../../api';
 
 export type Countdown = number;
 
