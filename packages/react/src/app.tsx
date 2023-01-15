@@ -1,11 +1,12 @@
 import 'normalize.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import Home, { loader, action } from './pages/home';
 import Tender from './pages/tender';
 import NotFound from './pages/notFound';
 import ErrorMessage from './components/errorMessage';
-import { ErrorMessageProvider } from './contexts/error';
+import { store } from './state/store';
 
 const router = createBrowserRouter([
   {
@@ -26,10 +27,10 @@ const router = createBrowserRouter([
 
 export function App() {
   return (
-    <ErrorMessageProvider>
+    <Provider store={store}>
       <RouterProvider router={router} />
       <ErrorMessage />
-    </ErrorMessageProvider>
+    </Provider>
   );
 }
 
