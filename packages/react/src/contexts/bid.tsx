@@ -29,7 +29,7 @@ export function BidProvider({ children }: PropsWithChildren) {
     [bid, roomName],
   );
 
-  const listener = useCallback(
+  const handler = useCallback(
     (broadcastData: BroadcastData) => {
       if (broadcastData.bid && broadcastData.bid.id !== bid?.id) setBid(broadcastData.bid);
     },
@@ -37,12 +37,12 @@ export function BidProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    socket.on(SocketEvent.Countdown, listener);
+    socket.on(SocketEvent.Countdown, handler);
 
     return () => {
-      socket.off(SocketEvent.Countdown, listener);
+      socket.off(SocketEvent.Countdown, handler);
     };
-  }, [listener]);
+  }, [handler]);
 
   const value = useMemo(
     () => ({

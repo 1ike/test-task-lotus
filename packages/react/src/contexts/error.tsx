@@ -33,24 +33,24 @@ export function ErrorMessageProvider({ children }: PropsWithChildren) {
     setErrorMessageState(errorMessageInitialState.errorMessage);
   }, [setErrorMessageState]);
 
-  const listener = useCallback(() => {
+  const handler = useCallback(() => {
     setErrorMessage('Проблемы с соединением через socket.io.');
   }, [setErrorMessage]);
 
-  const listenerConnect = useCallback(() => {
+  const handlerConnect = useCallback(() => {
     resetErrorMessage();
   }, [resetErrorMessage]);
 
   useEffect(() => {
-    socket.on(SocketEvent.ConnectError, listener);
-    socket.on(SocketEvent.Disconnect, listener);
-    socket.on(SocketEvent.Connect, listenerConnect);
+    socket.on(SocketEvent.ConnectError, handler);
+    socket.on(SocketEvent.Disconnect, handler);
+    socket.on(SocketEvent.Connect, handlerConnect);
 
     return () => {
-      socket.off(SocketEvent.ConnectError, listener);
-      socket.off(SocketEvent.Disconnect, listener);
+      socket.off(SocketEvent.ConnectError, handler);
+      socket.off(SocketEvent.Disconnect, handler);
     };
-  }, [listener, listenerConnect]);
+  }, [handler, handlerConnect]);
 
   const value = useMemo(
     () => ({

@@ -13,7 +13,7 @@ export function CountdownRow() {
   return (
     <tr>
       <th>
-        <div className={styles.header}>Ход</div>
+        <div className={styles.header}>{activeParticipantID ? 'Ход' : <Countdown />}</div>
       </th>
       {participants.length === 0 && !loading ? (
         <th>

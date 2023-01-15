@@ -12,7 +12,7 @@ export const CountdownContext = React.createContext<CountdownContextType>({});
 export function CountdownProvider({ children }: PropsWithChildren) {
   const [countdown, setCountdownState] = useState<Countdown>();
 
-  const listener = useCallback(
+  const handler = useCallback(
     (broadcastData: BroadcastData) => {
       setCountdownState(broadcastData.countdown);
     },
@@ -20,12 +20,12 @@ export function CountdownProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    socket.on(SocketEvent.Countdown, listener);
+    socket.on(SocketEvent.Countdown, handler);
 
     return () => {
-      socket.off(SocketEvent.Countdown, listener);
+      socket.off(SocketEvent.Countdown, handler);
     };
-  }, [listener]);
+  }, [handler]);
 
   const value = useMemo(
     () => ({
