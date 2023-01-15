@@ -1,14 +1,18 @@
-import { PropsWithChildren, useContext } from 'react';
+import { PropsWithChildren } from 'react';
 
 import { Participants } from '@lotus/shared';
 import styles from './columnNamesRow.module.scss';
-import { BidContext } from '../../../contexts/bid';
 import { Loading } from '../../../hooks/useJoinRoom';
+import { useBid } from '../../../hooks/useBid';
+import { useAppSelector } from '../../../../../state/store';
+import { selectBid } from '../../../state/tender';
 
 type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
 
 export function ColumnNamesRow({ participants, loading }: Props) {
-  const { requestNewBid, bid } = useContext(BidContext);
+  const bid = useAppSelector(selectBid);
+
+  const requestNewBid = useBid();
 
   return (
     <tr>

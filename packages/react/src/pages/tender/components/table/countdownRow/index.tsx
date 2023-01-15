@@ -1,15 +1,17 @@
-import { useContext, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 
 import { Participants } from '@lotus/shared';
 import styles from './countdownRow.module.scss';
 import Countdown from './countdown';
-import { BidContext } from '../../../contexts/bid';
+
 import { Loading } from '../../../hooks/useJoinRoom';
+import { useAppSelector } from '../../../../../state/store';
+import { selectBid } from '../../../state/tender';
 
 type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
 
 export function CountdownRow({ participants, loading }: Props) {
-  const { bid } = useContext(BidContext);
+  const bid = useAppSelector(selectBid);
   const activeParticipantID = bid?.participantID;
 
   return (
