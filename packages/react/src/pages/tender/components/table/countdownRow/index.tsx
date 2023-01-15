@@ -1,12 +1,14 @@
-import { useContext } from 'react';
+import { useContext, PropsWithChildren } from 'react';
 
+import { Participants } from '@lotus/shared';
 import styles from './countdownRow.module.scss';
 import Countdown from './countdown';
-import { ParticipantsContext } from '../../../contexts/paticipants';
 import { BidContext } from '../../../contexts/bid';
+import { Loading } from '../../../hooks/useJoinRoom';
 
-export function CountdownRow() {
-  const { participants, loading } = useContext(ParticipantsContext);
+type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
+
+export function CountdownRow({ participants, loading }: Props) {
   const { bid } = useContext(BidContext);
   const activeParticipantID = bid?.participantID;
 
@@ -22,12 +24,12 @@ export function CountdownRow() {
           )}
         </div>
       </th>
-      {participants.length === 0 && !loading ? (
+      {participants?.length === 0 && !loading ? (
         <th>
           <Countdown />
         </th>
       ) : (
-        participants.map((participant) => (
+        participants?.map((participant) => (
           <th key={participant.id}>{participant.id === activeParticipantID && <Countdown />}</th>
         ))
       )}

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ParticipantsProvider } from './contexts/paticipants';
 import { BidProvider } from './contexts/bid';
 import { CountdownProvider } from './contexts/countdown';
 import styles from './tender.module.scss';
@@ -17,23 +16,21 @@ export function Tender() {
   }, [roomName]);
 
   return (
-    <ParticipantsProvider>
-      <BidProvider>
-        <CountdownProvider>
-          <Header
-            title="Ход торгов"
-            preTitle="Тестовые торги на аппарат ЛОТОС №2033564 (09.11.2020 07:00)"
+    <BidProvider>
+      <CountdownProvider>
+        <Header
+          title="Ход торгов"
+          preTitle="Тестовые торги на аппарат ЛОТОС №2033564 (09.11.2020 07:00)"
+        />
+        <main className={styles.content}>
+          <Warning
+            text="Уважаемые участники, во время вашего хода вы можете изменить параметры торгов, указанных в таблице:"
+            className={styles.warning}
           />
-          <main className={styles.content}>
-            <Warning
-              text="Уважаемые участники, во время вашего хода вы можете изменить параметры торгов, указанных в таблице:"
-              className={styles.warning}
-            />
-            <Table />
-          </main>
-        </CountdownProvider>
-      </BidProvider>
-    </ParticipantsProvider>
+          <Table />
+        </main>
+      </CountdownProvider>
+    </BidProvider>
   );
 }
 

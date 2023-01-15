@@ -2,10 +2,11 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 
 import { errorMessageReducer, errorMessageReducerName } from './errorMessage';
+import { tenderReducer, tenderReducerName } from '../pages/tender/state/tender';
 
 const rootReducer = combineReducers({
   [errorMessageReducerName]: errorMessageReducer,
-  // [authReducerName]: authReducer,
+  [tenderReducerName]: tenderReducer,
 });
 
 export const store = configureStore({

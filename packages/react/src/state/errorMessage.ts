@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from './store';
 
-export type ErrorMessage = string;
+type ErrorMessage = string;
 
 const errorMessageInitialState: ErrorMessage = '';
 

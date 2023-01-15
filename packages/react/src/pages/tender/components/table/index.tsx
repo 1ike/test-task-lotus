@@ -1,11 +1,10 @@
-import { useContext } from 'react';
-
 import { Participant } from '@lotus/shared';
-
 import styles from './table.module.scss';
-import { ParticipantsContext } from '../../contexts/paticipants';
 import CountdownRow from './countdownRow';
 import ColumnNamesRow from './columnNamesRow';
+import { useAppSelector } from '../../../../state/store';
+import { selectParticipants } from '../../state/tender';
+import { useJoinRoom } from '../../hooks/useJoinRoom';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -22,14 +21,15 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 ];
 
 export function Table() {
-  const { participants, loading } = useContext(ParticipantsContext);
+  const loading = useJoinRoom();
+  const participants = useAppSelector(selectParticipants);
 
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead className={styles.head}>
-          <CountdownRow />
-          <ColumnNamesRow />
+          <CountdownRow participants={participants} loading={loading} />
+          <ColumnNamesRow participants={participants} loading={loading} />
         </thead>
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (
@@ -38,7 +38,7 @@ export function Table() {
                 <div>{rowName}</div>
               </th>
               {!loading &&
-                participants.map((participant) => (
+                participants?.map((participant) => (
                   <td key={participant.id}>
                     <div className={styles.rowValues}>
                       {key === 'value' ? (

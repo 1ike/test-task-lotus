@@ -1,18 +1,20 @@
-import { useContext } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 
+import { Participants } from '@lotus/shared';
 import styles from './columnNamesRow.module.scss';
-import { ParticipantsContext } from '../../../contexts/paticipants';
 import { BidContext } from '../../../contexts/bid';
+import { Loading } from '../../../hooks/useJoinRoom';
 
-export function ColumnNamesRow() {
-  const { participants, loading } = useContext(ParticipantsContext);
+type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
+
+export function ColumnNamesRow({ participants, loading }: Props) {
   const { requestNewBid, bid } = useContext(BidContext);
 
   return (
     <tr>
       <th>Параметры и требования</th>
       {!loading &&
-        participants.map(({ id, name }) => {
+        participants?.map(({ id, name }) => {
           const isActive = id === bid?.participantID;
           return (
             <th
