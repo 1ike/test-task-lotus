@@ -10,5 +10,5 @@ export enum SocketEvent {
   MakeNewBid = 'makeNewBid',
 }
 
-export const regexStringRawName = String.raw`^[А-Яа-яЁё\s0-9_-]+$`;
+export const regexStringRawName = String.raw`^[A-Za-zА-Яа-яЁё\s0-9_-]+$`;
 export const regexStringRawCountdownStartValue = String.raw`^[0-9]+$`;

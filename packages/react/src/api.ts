@@ -9,10 +9,16 @@ export const socket = io(baseUrl);
 
 const apiUrl = `${SERVER_URL}:${SERVER_PORT}/${API_PREFIX}`;
 
+type NestError = { message?: string };
+const handleNestError = async (response: Response) => {
+  const message = ((await response.json()) as NestError)?.message || response.statusText;
+  throw new Error(message);
+};
+
 export const fetchRoomNames = (): Promise<RoomName[]> =>
   fetch(`${apiUrl}/rooms`).then((response) => {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return handleNestError(response);
     }
     return response.json();
   });
@@ -26,7 +32,7 @@ export const createRoom = (data: CreateRoomRequest) =>
     body: JSON.stringify(data),
   }).then((response) => {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return handleNestError(response);
     }
     return response.text();
   });
@@ -36,7 +42,7 @@ export const deleteRoom = (roomName: RoomName) =>
     method: 'DELETE',
   }).then((response) => {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return handleNestError(response);
     }
     return response.text();
   });

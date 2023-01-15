@@ -3,7 +3,7 @@ import { Link, Form, useLoaderData, ActionFunctionArgs, useActionData } from 're
 import { z } from 'zod';
 
 import { RoomName, regexStringRawName, regexStringRawCountdownStartValue } from '@lotus/shared';
-import { TITLE_POSTFIX, TIMER } from '../../config';
+import { TITLE_POSTFIX, TIMER, DEFAULT_ROOM_NAME } from '../../config';
 import styles from './home.module.scss';
 import { fetchRoomNames, deleteRoom, createRoom } from '../../api';
 import { ErrorMessageContext } from '../../contexts/error';
@@ -77,7 +77,11 @@ export function Home() {
             <Link to={`/room/${roomName}`}>Войти в комнату {roomName}</Link>
             <Form method="delete">
               <input type="text" hidden name="deletingName" value={roomName} readOnly />
-              <button type="submit">Удалить комнату</button>
+              {roomName === DEFAULT_ROOM_NAME ? (
+                'Комната по умолчанию'
+              ) : (
+                <button type="submit">Удалить комнату</button>
+              )}
             </Form>
           </div>
         ))}

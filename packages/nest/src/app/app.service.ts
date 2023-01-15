@@ -43,10 +43,13 @@ export class AppService {
 
   private readonly TIMER: Countdown;
 
+  private readonly DEFAULT_ROOM_NAME: RoomName;
+
   private server!: Server;
 
   constructor(private configService: ConfigService<Config>) {
     const name = this.configService.get('ROOM_NAME', { infer: true })!;
+    this.DEFAULT_ROOM_NAME = name;
     const countdownStartValue = this.configService.get('TIMER', { infer: true })!;
     this.TIMER = countdownStartValue;
     this.rooms = new Map();
@@ -78,6 +81,10 @@ export class AppService {
   }
 
   deleteRoom(roomName: RoomName) {
+    if (roomName === this.DEFAULT_ROOM_NAME) {
+      throw new BadRequestException('Эту комнату нельзя удалить.');
+    }
+
     this.rooms.delete(roomName);
     return roomName;
   }
