@@ -10,9 +10,7 @@ export function useSubscribeBid() {
 
   const handler = useCallback(
     (broadcastData: BroadcastData) => {
-      if (broadcastData.bid) {
-        dispatch(tenderActions.setBid(broadcastData.bid));
-      }
+      dispatch(tenderActions.setBid(broadcastData.bid));
     },
     [dispatch],
   );

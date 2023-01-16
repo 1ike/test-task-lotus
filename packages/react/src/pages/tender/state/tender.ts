@@ -20,9 +20,9 @@ const slice = createSlice({
     setParticipants: (state, action: PayloadAction<Participants>) => {
       state.participants = action.payload;
     },
-    setBid: (state, action: PayloadAction<Bid>) => {
+    setBid: (state, action: PayloadAction<Bid | undefined>) => {
       const newBid = action.payload;
-      if (newBid.id !== state.bid?.id) {
+      if (newBid?.id !== state.bid?.id) {
         state.bid = newBid;
       }
     },
