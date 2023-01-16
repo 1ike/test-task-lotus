@@ -21,7 +21,10 @@ const slice = createSlice({
       state.participants = action.payload;
     },
     setBid: (state, action: PayloadAction<Bid>) => {
-      state.bid = action.payload;
+      const newBid = action.payload;
+      if (newBid.id !== state.bid?.id) {
+        state.bid = newBid;
+      }
     },
     setCountdown: (state, action: PayloadAction<Countdown>) => {
       state.countdown = action.payload;

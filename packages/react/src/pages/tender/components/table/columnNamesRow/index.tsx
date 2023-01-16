@@ -1,19 +1,20 @@
 import { PropsWithChildren } from 'react';
 
-import { ParticipantID, Participants } from '@lotus/shared';
+import { Participants } from '@lotus/shared';
 import styles from './columnNamesRow.module.scss';
 import { Loading } from '../../../hooks/useJoinRoom';
 import { useAppSelector } from '../../../../../state/store';
 import { selectBid } from '../../../state/tender';
+import { useRequestNewBid } from './useRequestNewBid';
 
 type Props = {
   participants?: Participants;
   loading?: Loading;
-  requestNewBid: (id: ParticipantID) => void;
 } & PropsWithChildren;
 
-export function ColumnNamesRow({ participants, loading, requestNewBid }: Props) {
+export function ColumnNamesRow({ participants, loading }: Props) {
   const bid = useAppSelector(selectBid);
+  const requestNewBid = useRequestNewBid();
 
   return (
     <tr>

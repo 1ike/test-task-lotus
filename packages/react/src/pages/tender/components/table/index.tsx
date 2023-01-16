@@ -24,8 +24,8 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 
 export function Table() {
   const loading = useJoinRoom();
-  const requestNewBid = useSubscribeBid();
   useSubscribeCountdown();
+  useSubscribeBid();
 
   const participants = useAppSelector(selectParticipants);
 
@@ -34,11 +34,7 @@ export function Table() {
       <table className={styles.table}>
         <thead className={styles.head}>
           <CountdownRow participants={participants} loading={loading} />
-          <ColumnNamesRow
-            participants={participants}
-            loading={loading}
-            requestNewBid={requestNewBid}
-          />
+          <ColumnNamesRow participants={participants} loading={loading} />
         </thead>
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (
