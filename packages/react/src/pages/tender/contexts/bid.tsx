@@ -31,7 +31,7 @@ export function BidProvider({ children }: PropsWithChildren) {
 
   const handler = useCallback(
     (broadcastData: BroadcastData) => {
-      if (broadcastData.bid && broadcastData.bid.id !== bid?.id) setBid(broadcastData.bid);
+      if (broadcastData.bid?.id !== bid?.id) setBid(broadcastData.bid);
     },
     [setBid, bid],
   );
