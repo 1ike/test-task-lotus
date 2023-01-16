@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ParticipantsProvider } from './contexts/paticipants';
+import { ParticipantsProvider } from './contexts/participants';
 import { BidProvider } from './contexts/bid';
 import { CountdownProvider } from './contexts/countdown';
 import styles from './tender.module.scss';

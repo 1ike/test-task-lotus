@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Participant } from '@lotus/shared';
 
 import styles from './table.module.scss';
-import { ParticipantsContext } from '../../contexts/paticipants';
+import { ParticipantsContext } from '../../contexts/participants';
 import CountdownRow from './countdownRow';
 import ColumnNamesRow from './columnNamesRow';
 

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import styles from './countdownRow.module.scss';
 import Countdown from './countdown';
-import { ParticipantsContext } from '../../../contexts/paticipants';
+import { ParticipantsContext } from '../../../contexts/participants';
 import { BidContext } from '../../../contexts/bid';
 
 export function CountdownRow() {

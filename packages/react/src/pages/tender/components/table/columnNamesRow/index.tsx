@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import styles from './columnNamesRow.module.scss';
-import { ParticipantsContext } from '../../../contexts/paticipants';
+import { ParticipantsContext } from '../../../contexts/participants';
 import { BidContext } from '../../../contexts/bid';
 
 export function ColumnNamesRow() {
