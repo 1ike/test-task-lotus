@@ -1,14 +1,10 @@
 import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ParticipantID, NewBidRequest, SocketEvent } from '@lotus/shared';
-import { socket } from '../../../../../api';
-import { useAppSelector } from '../../../../../state/store';
-import { selectBid } from '../../../state/tender';
+import { ParticipantID, NewBidRequest, SocketEvent, Bid } from '@lotus/shared';
+import { socket } from '../../../../../../api';
 
-export function useRequestNewBid() {
-  const bid = useAppSelector(selectBid);
-
+export function useRequestNewBid(bid: Bid | undefined) {
   const { roomName } = useParams();
 
   const requestNewBid = useCallback(

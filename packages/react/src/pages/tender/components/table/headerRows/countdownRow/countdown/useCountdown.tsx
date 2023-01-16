@@ -1,6 +1,6 @@
 import { BroadcastData, Countdown, SocketEvent } from '@lotus/shared';
 import { useCallback, useEffect, useState } from 'react';
-import { socket } from '../../../../../../api';
+import { socket } from '../../../../../../../api';
 
 export function useCountdown() {
   const [countdown, setCountdown] = useState<Countdown>();

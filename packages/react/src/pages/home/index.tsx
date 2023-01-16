@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, Form, useLoaderData, ActionFunctionArgs, useActionData } from 'react-router-dom';
 import { z } from 'zod';
 
@@ -6,10 +6,7 @@ import { RoomName, regexStringRawName, regexStringRawCountdownStartValue } from 
 import { TITLE_POSTFIX, TIMER, DEFAULT_ROOM_NAME } from '../../config';
 import styles from './home.module.scss';
 import { fetchRoomNames, deleteRoom, createRoom } from '../../api';
-import { errorMessageActions } from '../../state/errorMessage';
-import { useAppDispatch } from '../../state/store';
-
-const { setErrorMessage, resetErrorMessage } = errorMessageActions;
+import { ErrorMessageContext } from '../../contexts/error';
 
 /* eslint-disable @typescript-eslint/indent */
 type LoaderResponse =
@@ -37,8 +34,6 @@ type ActionResponse =
 const defaultTextInputValue = '';
 
 export function Home() {
-  const dispatch = useAppDispatch();
-
   const loaderResponse = useLoaderData() as LoaderResponse;
   const actionResponse = useActionData() as ActionResponse | undefined;
 
@@ -46,26 +41,28 @@ export function Home() {
   const [name, setName] = useState(defaultTextInputValue);
   const [countdownStartValue, setCountdownStartValue] = useState(defaultTextInputValue);
 
+  const { setErrorMessage, resetErrorMessage } = useContext(ErrorMessageContext);
+
   useEffect(() => {
     if (actionResponse) {
       if (actionResponse.success) {
         setName(defaultTextInputValue);
         setCountdownStartValue(defaultTextInputValue);
       } else {
-        dispatch(setErrorMessage(actionResponse.error.message));
+        setErrorMessage?.(actionResponse.error.message);
       }
     }
     if (loaderResponse.success) {
       setAddedRooms(loaderResponse.data);
     } else {
-      dispatch(setErrorMessage(`Ошибка загрузки списка комнат ${loaderResponse.error.message}`));
+      setErrorMessage?.(`Ошибка загрузки списка комнат ${loaderResponse.error.message}`);
     }
 
     // eslint-disable-next-line consistent-return
     return () => {
-      dispatch(resetErrorMessage());
+      resetErrorMessage?.();
     };
-  }, [actionResponse, loaderResponse, dispatch]);
+  }, [actionResponse, loaderResponse, setErrorMessage, resetErrorMessage]);
 
   useEffect(() => {
     document.title = `Главная${TITLE_POSTFIX}`;

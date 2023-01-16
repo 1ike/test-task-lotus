@@ -1,17 +1,11 @@
-import { PropsWithChildren } from 'react';
-
-import { Participants } from '@lotus/shared';
+import { Bid } from '@lotus/shared';
 import styles from './countdownRow.module.scss';
 import Countdown from './countdown';
+import type { TableHeaderProps } from '..';
 
-import { Loading } from '../../../hooks/useJoinRoom';
-import { useAppSelector } from '../../../../../state/store';
-import { selectBid } from '../../../state/tender';
+type Props = { bid?: Bid } & TableHeaderProps;
 
-type Props = { participants?: Participants; loading?: Loading } & PropsWithChildren;
-
-export function CountdownRow({ participants, loading }: Props) {
-  const bid = useAppSelector(selectBid);
+export function CountdownRow({ participants, loading, bid }: Props) {
   const activeParticipantID = bid?.participantID;
 
   return (

@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import { SocketEvent, JoinRoomResponse } from '@lotus/shared';
 import { useParams } from 'react-router-dom';
 
-import { socket } from '../../../api';
-import { useAppDispatch } from '../../../state/store';
-import { tenderActions } from '../state/tender';
+import { SocketEvent, JoinRoomResponse, Participants } from '@lotus/shared';
+import { socket } from '../../../../api';
 
 export type Loading = boolean;
 const initialLoading = true;
 
 export function useJoinRoom() {
-  const dispatch = useAppDispatch();
+  const [participants, setParticipants] = useState<Participants>();
   const [loading, setLoading] = useState<Loading>(initialLoading);
 
   const { roomName } = useParams();
@@ -20,9 +18,9 @@ export function useJoinRoom() {
       setLoading(false);
 
       const { participants: roomParticipants }: JoinRoomResponse = JSON.parse(json);
-      dispatch(tenderActions.setParticipants(roomParticipants));
+      setParticipants(roomParticipants);
     });
-  }, [roomName, dispatch]);
+  }, [roomName, setParticipants]);
 
   useEffect(() => {
     socket.io.on('reconnect', joinRoom);
@@ -39,5 +37,5 @@ export function useJoinRoom() {
     };
   }, [roomName, joinRoom]);
 
-  return loading;
+  return { participants, loading };
 }

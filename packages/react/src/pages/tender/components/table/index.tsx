@@ -1,11 +1,7 @@
 import { Participant } from '@lotus/shared';
 import styles from './table.module.scss';
-import CountdownRow from './countdownRow';
-import ColumnNamesRow from './columnNamesRow';
-import { useAppSelector } from '../../../../state/store';
-import { selectParticipants } from '../../state/tender';
-import { useJoinRoom } from '../../hooks/useJoinRoom';
-import { useSubscribeBid } from '../../hooks/useSubscribeBid';
+import { useJoinRoom } from './useJoinRoom';
+import HeaderRows from './headerRows';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -22,17 +18,13 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 ];
 
 export function Table() {
-  const loading = useJoinRoom();
-  useSubscribeBid();
-
-  const participants = useAppSelector(selectParticipants);
+  const { participants, loading } = useJoinRoom();
 
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead className={styles.head}>
-          <CountdownRow participants={participants} loading={loading} />
-          <ColumnNamesRow participants={participants} loading={loading} />
+          <HeaderRows participants={participants} loading={loading} />
         </thead>
         <tbody className={styles.body}>
           {displayedParams.map(([key, rowName]) => (
