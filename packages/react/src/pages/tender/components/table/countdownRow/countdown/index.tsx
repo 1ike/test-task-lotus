@@ -1,7 +1,6 @@
 import styles from './countdown.module.scss';
 import { ReactComponent as TimerIcon } from './hourglass-outline.svg';
-import { useAppSelector } from '../../../../../../state/store';
-import { selectCountdown } from '../../../../state/tender';
+import { useCountdown } from './useCountdown';
 
 const formatTime = (secondsAll: number) => {
   const seconds = secondsAll % 60;
@@ -20,7 +19,7 @@ const formatTime = (secondsAll: number) => {
 };
 
 export function Countdown() {
-  const countdown = useAppSelector(selectCountdown);
+  const countdown = useCountdown();
 
   if (!countdown) return null;
 

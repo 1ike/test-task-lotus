@@ -6,7 +6,6 @@ import { useAppSelector } from '../../../../state/store';
 import { selectParticipants } from '../../state/tender';
 import { useJoinRoom } from '../../hooks/useJoinRoom';
 import { useSubscribeBid } from '../../hooks/useSubscribeBid';
-import { useSubscribeCountdown } from '../../hooks/useSubscribeCountdown';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -24,7 +23,6 @@ const displayedParams: Array<[DisplayedParamsKey, string]> = [
 
 export function Table() {
   const loading = useJoinRoom();
-  useSubscribeCountdown();
   useSubscribeBid();
 
   const participants = useAppSelector(selectParticipants);
