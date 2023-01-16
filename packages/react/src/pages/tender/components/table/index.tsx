@@ -7,6 +7,7 @@ import { selectParticipants } from '../../state/tender';
 import { useJoinRoom } from '../../hooks/useJoinRoom';
 import { useSubscribeBid } from '../../hooks/useSubscribeBid';
 import { useSubscribeCountdown } from '../../hooks/useSubscribeCountdown';
+import { useSubscribeSocketError } from '../../hooks/useSubscribeSocketError';
 
 type DisplayedParamsKey = keyof Omit<Participant, 'id' | 'name'>;
 
@@ -26,6 +27,7 @@ export function Table() {
   const loading = useJoinRoom();
   useSubscribeCountdown();
   useSubscribeBid();
+  useSubscribeSocketError();
 
   const participants = useAppSelector(selectParticipants);
 
