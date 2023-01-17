@@ -1,13 +1,16 @@
-import { getGreeting } from '../support/app.po';
+import { getHeader } from '../support/app.po';
 
 describe('react', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
+  it('should display Room header', () => {
     // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
+    // cy.login('my-email@something.com', 'myPassword');
+
+    cy.intercept('GET', '/api/rooms', []).as('getRooms');
+    cy.wait('@getRooms');
 
     // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome react');
+    getHeader().contains('Комнаты для торгов');
   });
 });

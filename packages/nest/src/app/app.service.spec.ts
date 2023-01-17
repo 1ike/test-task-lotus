@@ -1,21 +1,34 @@
 import { Test } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppService } from './app.service';
+import { participants } from '../assets/mockData';
+import configuration from './config/configuration';
 
 describe('AppService', () => {
   let service: AppService;
 
   beforeAll(async () => {
     const app = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          load: [configuration],
+          isGlobal: true,
+        }),
+      ],
       providers: [AppService],
     }).compile();
 
     service = app.get<AppService>(AppService);
   });
 
-  describe('getData', () => {
-    it('should return "Welcome to nest!"', () => {
-      expect(service.getData()).toEqual({ message: 'Welcome to nest!' });
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('getParticipants', () => {
+    it('should return participants', () => {
+      expect(service.getParticipants('anyString')).toEqual(participants);
     });
   });
 });
