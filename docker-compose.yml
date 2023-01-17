@@ -6,10 +6,11 @@ services:
       args:
         - URL=$NX_SERVER_URL
         - PORT=$NX_SERVER_PORT
+    image: lotus:v1
+    container_name: lotus
     restart: always
     environment:
       - NX_SERVER_PORT=$NX_SERVER_PORT
       - NX_NX_TIMER=$NX_TIMER
     ports:
       - $NX_SERVER_PORT:$NX_SERVER_PORT
-    container_name: lotus
